@@ -8,9 +8,6 @@ GO
 CREATE TABLE CUSTOMER (
     c_phone VARCHAR(10) CHECK (LEN(c_phone) = 10) CONSTRAINT PK_CUSTOMER PRIMARY KEY,
     c_name VARCHAR(50) NOT NULL,
-    c_birth DATE NOT NULL,
-    c_gender VARCHAR(10) NOT NULL,
-    c_address VARCHAR(255) NOT NULL,
     c_point DECIMAL(15, 0) check (c_point  >= 0),
     c_status BIT DEFAULT 1
 );
