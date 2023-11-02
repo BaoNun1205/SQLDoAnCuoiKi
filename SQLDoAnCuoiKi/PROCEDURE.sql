@@ -211,7 +211,7 @@ END;
 CREATE PROCEDURE proc_AddCustomer
 	@phone VARCHAR(10),
 	@name VARCHAR(255),	
-	@point DECIMAL
+	@point DECIMAL(15, 0)
 AS
 BEGIN
 	BEGIN TRY
