@@ -6,7 +6,7 @@ RETURNS TABLE
 AS
 RETURN Select a_username, a_password, e_name, ac.e_id from ACCOUNT as ac inner join Employee as em on ac.e_id = em.e_id Where a_username = @username and a_password = @password
 
-
+--ACCOUNT
 --funcition kiem tra xem account do co ton tai trong database 
 GO
 CREATE FUNCTION uf_CheckLogin (@username char(50), @password char(25))
@@ -18,6 +18,42 @@ BEGIN
 	RETURN @result		
 END
 
+--PRODUCT
+--tìm kiếm mặt hàng theo mã mặt hàng
+CREATE FUNCTION fn_FindProductByIDType (@idtype VARCHAR(10))
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT p_id as "Mã mặt hàng", 
+           p_name as "Tên mặt hàng",
+           p_price as "Giá",
+           p_image,
+           p_size as "Kích thước",
+           p_quantity as "Số lượng"
+    FROM PRODUCT
+    WHERE p_id LIKE '%' + @idtype + '%' AND p_status = 1
+);
+GO
+
+--tìm kiếm mặt hàng theo tên mặt hàng
+CREATE FUNCTION fn_FindProductByName (@name VARCHAR(225))
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT p_id as "Mã mặt hàng", 
+           p_name as "Tên mặt hàng",
+           p_price as "Giá",
+           p_image,
+           p_size as "Kích thước",
+           p_quantity as "Số lượng"
+    FROM PRODUCT
+    WHERE p_name LIKE '%' + @name + '%' AND p_status = 1
+);
+GO
+	
+--BILL
 --tìm kiếm hóa đơn theo mã hóa đơn
 GO
 CREATE FUNCTION func_timBillTheoMaBill (@b_id varchar(10))
