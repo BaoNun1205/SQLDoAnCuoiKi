@@ -205,3 +205,23 @@ BEGIN
         PRINT ERROR_MESSAGE();
     END CATCH;
 END;
+
+--Customer
+--Thêm khach hang
+CREATE PROCEDURE proc_AddCustomer
+	@phone VARCHAR(10),
+	@name VARCHAR(255),	
+	@point DECIMAL
+AS
+BEGIN
+	BEGIN TRY
+		Begin Tran insert_Cus
+		INSERT INTO dbo.Customer VALUES(@phone, @name, @point, default)
+		Commit Tran insert_Cus
+	END TRY
+	BEGIN CATCH
+		print N'Gặp lỗi trong quá trình thêm khách hàng'
+		Rollback Tran insert_Cus
+	END CATCH
+END
+GO
