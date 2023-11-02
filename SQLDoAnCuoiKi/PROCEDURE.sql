@@ -262,3 +262,63 @@ BEGIN
 	End Catch
 END
 GO
+--Employee
+--Thêm nhan vien
+CREATE PROCEDURE proc_AddEmployee
+	@id VARCHAR(10),
+	@name VARCHAR(255),	
+	@address VARCHAR(255),
+	@phone VARCHAR(10),
+	@gender VARCHAR(10)
+AS
+BEGIN
+	BEGIN TRY
+		Begin Tran insert_Employee
+		INSERT INTO dbo.EMPLOYEE VALUES(@id, @name, @address, @phone, @gender, default)
+		Commit Tran insert_Employee
+	END TRY
+	BEGIN CATCH
+		print N'Gặp lỗi trong quá trình thêm nhân viên'
+		Rollback Tran insert_Employee
+	END CATCH
+END
+GO
+--Cập nhật nhân viên
+CREATE PROC proc_UpdateEmployee
+	@id VARCHAR(10),
+	@name VARCHAR(255),	
+	@address VARCHAR(255),
+	@phone VARCHAR(10),
+	@gender VARCHAR(10)
+AS
+BEGIN
+	Begin Try
+		Begin Tran update_Employee
+		UPDATE EMPLOYEE 
+		SET e_name = @name, e_address = @address, e_phone = @phone, e_gender = @gender
+		WHERE e_id = @id
+		Commit Tran update_Employee
+	End Try
+	Begin Catch
+		Print N'Không thể cập nhật nhân viên'
+		Rollback Tran update_Employee
+	End Catch
+END
+GO
+
+--Xóa nhân viên
+CREATE PROC proc_DeleteEmployee
+	@id VARCHAR(10)
+AS
+BEGIN
+	Begin Try
+		Begin Tran delete_Employee
+		Update EMPLOYEE Set e_status = 0 WHERE EMPLOYEE.e_id = @id
+		Commit Tran delete_Employee
+	End Try
+	Begin Catch
+		Print N'Không thể xóa nhân viên' 
+		Rollback Tran delete_Employee
+	End Catch
+END
+GO
