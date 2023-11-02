@@ -22,43 +22,7 @@ BEGIN
 	END CATCH
 END
 GO
---Cập nhật khách hàng
-CREATE PROC proc_UpdateCustomer
-	@phone VARCHAR(10),
-	@name VARCHAR(255),	
-	@point DECIMAL(15, 0)
-AS
-BEGIN
-	Begin Try
-		Begin Tran update_Cus
-		UPDATE CUSTOMER 
-		SET c_name = @name, c_point = @point
-		WHERE c_phone = @phone
-		Commit Tran update_Cus
-	End Try
-	Begin Catch
-		Print N'Không thể cập nhật khách hàng'
-		Rollback Tran update_Cus
-	End Catch
-END
-GO
 
---Xóa khách hàng
-CREATE PROC proc_DeleteCustomer
-	@phone VARCHAR(10)
-AS
-BEGIN
-	Begin Try
-		Begin Tran delete_Cus
-		Update CUSTOMER Set c_status = 1 WHERE CUSTOMER.c_phone = @phone
-		Commit Tran delete_Cus
-	End Try
-	Begin Catch
-		Print N'Không thể xóa khách hàng' 
-		Rollback Tran delete_Cus
-	End Catch
-END
-GO
 --Cập nhật mặt hàng
 CREATE PROC proc_UpdateProduct
 	@pid VARCHAR(10),
@@ -259,5 +223,42 @@ BEGIN
 		print N'Gặp lỗi trong quá trình thêm khách hàng'
 		Rollback Tran insert_Cus
 	END CATCH
+END
+GO
+--Cập nhật khách hàng
+CREATE PROC proc_UpdateCustomer
+	@phone VARCHAR(10),
+	@name VARCHAR(255),	
+	@point DECIMAL(15, 0)
+AS
+BEGIN
+	Begin Try
+		Begin Tran update_Cus
+		UPDATE CUSTOMER 
+		SET c_name = @name, c_point = @point
+		WHERE c_phone = @phone
+		Commit Tran update_Cus
+	End Try
+	Begin Catch
+		Print N'Không thể cập nhật khách hàng'
+		Rollback Tran update_Cus
+	End Catch
+END
+GO
+
+--Xóa khách hàng
+CREATE PROC proc_DeleteCustomer
+	@phone VARCHAR(10)
+AS
+BEGIN
+	Begin Try
+		Begin Tran delete_Cus
+		Update CUSTOMER Set c_status = 1 WHERE CUSTOMER.c_phone = @phone
+		Commit Tran delete_Cus
+	End Try
+	Begin Catch
+		Print N'Không thể xóa khách hàng' 
+		Rollback Tran delete_Cus
+	End Catch
 END
 GO
