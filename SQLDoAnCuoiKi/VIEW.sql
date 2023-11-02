@@ -18,7 +18,8 @@ AS
 SELECT c.c_phone AS "Số điện thoại",
        c.c_name AS "Tên khách hàng",
        c.c_point AS "Điểm tích lũy"
-FROM CUSTOMER c;
+FROM CUSTOMER c
+WHERE c.c_status = 1;
 
 GO
 --Xem thong tin hoa don
