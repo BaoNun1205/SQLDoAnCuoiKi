@@ -300,3 +300,12 @@ BEGIN
     END CATCH;
 END;
 GO
+--tìm hóa đơn bằng ngày tạo hóa đơn
+CREATE PROCEDURE proc_timBillTheoNgay
+	@ngayBatDau DATE,
+	@ngayKetThuc DATE
+AS
+BEGIN
+	SELECT b.b_id, b.b_date, b.b_totalpay, b.b_discount, c.c_phone, c.c_name  FROM CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone
+	WHERE b.b_status = 1 AND b_date BETWEEN @ngayBatDau AND @ngayKetThuc
+END;
