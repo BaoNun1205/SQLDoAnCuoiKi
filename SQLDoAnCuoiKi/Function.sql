@@ -34,3 +34,12 @@ RETURNS TABLE
 AS
 RETURN (SELECT b.b_id, b.b_date, b.b_totalpay, b.b_discount, c.c_phone, c.c_name  FROM CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone
 WHERE b.b_status = 1 and c.c_phone = @c_phone);
+
+--tìm kiếm hóa đơn theo mã sp
+GO
+CREATE FUNCTION func_timBillTheoMaMatHang(@p_id varchar(10))	
+RETURNS TABLE
+AS
+RETURN ( SELECT b.b_id, b.b_date, b.b_totalpay, b.b_discount, c.c_phone, c.c_name  
+	FROM (CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone) INNER JOIN DETAIL_BILL db ON db.b_id = b.b_id
+	WHERE b.b_status = 1 AND db.p_id = @p_id);
