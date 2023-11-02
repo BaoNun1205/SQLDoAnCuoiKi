@@ -17,3 +17,20 @@ BEGIN
 	SELECT @result=Count(*) FROM ACCOUNT Where a_username=@username AND a_password = @password
 	RETURN @result		
 END
+
+--tìm kiếm hóa đơn theo mã hóa đơn
+GO
+CREATE FUNCTION func_timBillTheoMaBill (@b_id varchar(10))
+RETURNS TABLE
+AS
+RETURN (SELECT b.b_id, b.b_date, b.b_totalpay, b.b_discount, c.c_phone, c.c_name  FROM CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone
+WHERE b.b_status = 1 AND b_id = @b_id)
+
+
+--tìm kiếm hóa đơn theo sđt khách hàng
+GO
+CREATE FUNCTION func_timBillTheoSDT (@c_phone varchar(10))
+RETURNS TABLE
+AS
+RETURN (SELECT b.b_id, b.b_date, b.b_totalpay, b.b_discount, c.c_phone, c.c_name  FROM CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone
+WHERE b.b_status = 1 and c.c_phone = @c_phone);
