@@ -64,50 +64,6 @@ BEGIN
 END
 GO
 
---Tìm mặt hàng bằng tên
-CREATE PROCEDURE proc_FindProduct
-    @searchChar VARCHAR(225)
-AS
-BEGIN
-    BEGIN TRY
-        SELECT p_id as "Mã mặt hàng", 
-			   p_name as "Tên mặt hàng",
-			   p_price as "Giá",
-			   p_image,
-			   p_size as "Kích thước",
-			   p_quantity as "Số lượng"
-        FROM PRODUCT
-        WHERE p_name LIKE '%' + @searchChar + '%' AND p_status = 1;
-    END TRY
-    BEGIN CATCH
-        PRINT 'Có lỗi xảy ra. Hãy kiểm tra xem đối tượng có tồn tại không.'
-        PRINT ERROR_MESSAGE();
-    END CATCH;
-END;
-GO
-
---tìm mặt hàng bằng ID
-CREATE PROCEDURE proc_FindProductByIDType
-    @idtype VARCHAR(10)
-AS
-BEGIN
-    BEGIN TRY
-        SELECT p_id as "Mã mặt hàng", 
-			   p_name as "Tên mặt hàng",
-			   p_price as "Giá",
-			   p_image,
-			   p_size as "Kích thước",
-			   p_quantity as "Số lượng"
-        FROM PRODUCT
-        WHERE p_id LIKE '%' + @idtype + '%' AND p_status = 1;
-    END TRY
-    BEGIN CATCH
-        PRINT 'Có lỗi xảy ra. Hãy kiểm tra xem mặt hàng có tồn tại không.'
-        PRINT ERROR_MESSAGE();
-    END CATCH;
-END;
-GO
-
 --tạo mã mặt hàng tự động
 CREATE PROCEDURE proc_CreateAutoProductID
     @idtype VARCHAR(10)
