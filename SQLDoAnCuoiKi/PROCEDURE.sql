@@ -253,7 +253,7 @@ AS
 BEGIN
 	Begin Try
 		Begin Tran delete_Cus
-		Update CUSTOMER Set c_status = 1 WHERE CUSTOMER.c_phone = @phone
+		Update CUSTOMER Set c_status = 0 WHERE CUSTOMER.c_phone = @phone
 		Commit Tran delete_Cus
 	End Try
 	Begin Catch
