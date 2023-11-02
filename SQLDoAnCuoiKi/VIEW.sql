@@ -20,7 +20,23 @@ SELECT c.c_phone AS "Số điện thoại",
        c.c_point AS "Điểm tích lũy"
 FROM CUSTOMER c
 WHERE c.c_status = 1;
+GO
+	
+--Xem thong tin nhan vien
+create view V_EMPLOYEE_INFO
+AS
+SELECT e_id, e_name, e_address, e_phone, e_gender
+FROM EMPLOYEE
+WHERE e_status = 1
+GO
 
+--Xem thong tin account
+create view V_ACCOUNT_INFO
+AS
+SELECT e.e_id, e.e_name, a.a_username, a.a_password
+FROM EMPLOYEE e INNER JOIN ACCOUNT a 
+ON e.e_id = a.e_id
+WHERE a.a_status = 1;
 GO
 --Xem thong tin hoa don
 CREATE VIEW V_INFO_BILL
@@ -48,23 +64,6 @@ FROM (DETAIL_BILL d INNER JOIN PRODUCT p ON d.p_id = p.p_id) INNER JOIN BILL b O
 WHERE b.b_status = 1
 
 GO
---Xem tai khoan va thong tin cua nhan vie ndo
-CREATE VIEW V_INFO_ACCOUNT
-AS
-SELECT a.a_username as "Tên đăng nhập",
-	 a.a_password as "Mật khẩu",
-	 a.a_status as "Trạng thái tài khoản",
-	 a.e_id as "Mã nhân viên",
-	 e.e_name as "Tên nhân viên",
-	 e.e_phone as "Số điện thoại",
-	 e.e_address as "Địa chỉ",
-	 e.e_gender as "Giới tính",
-	 e.e_status as "Tình trạng"
-FROM EMPLOYEE e INNER JOIN ACCOUNT a
-ON e.e_id = a.e_id;
-
-GO
-
 --Xem so luong mat hang ban duoc
 CREATE VIEW V_SOLD_ITEMS_COUNT 
 AS
