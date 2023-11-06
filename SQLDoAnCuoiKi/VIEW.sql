@@ -21,7 +21,15 @@ SELECT c.c_phone AS "Số điện thoại",
 FROM CUSTOMER c
 WHERE c.c_status = 1;
 GO
-	
+--Xem thong tin khach hang khong hoat dong
+CREATE VIEW V_CUSTOMERNOACTIVE 
+AS
+SELECT c.c_phone AS "Số điện thoại",
+       c.c_name AS "Tên khách hàng",
+       c.c_point AS "Điểm tích lũy"
+FROM CUSTOMER c
+WHERE c.c_status = 0;
+GO
 --Xem thong tin nhan vien
 create view V_EMPLOYEE_INFO
 AS
