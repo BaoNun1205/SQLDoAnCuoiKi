@@ -7,7 +7,7 @@ GO
 -- Tạo bảng CUSTOMER
 CREATE TABLE CUSTOMER (
     c_phone VARCHAR(10) CHECK (LEN(c_phone) = 10) CONSTRAINT PK_CUSTOMER PRIMARY KEY,
-    c_name VARCHAR(50) NOT NULL,
+    c_name NVARCHAR(50) NOT NULL,
     c_point DECIMAL(15, 0) check (c_point  >= 0),
     c_status BIT DEFAULT 1
 );
@@ -16,17 +16,17 @@ GO
 -- Tạo bảng EMPLOYEE
 CREATE TABLE EMPLOYEE (
     e_id VARCHAR(10) CONSTRAINT PK_EMPLOYEE PRIMARY KEY,
-    e_name VARCHAR(50) NOT NULL,
-    e_address VARCHAR(255) NOT NULL,
+    e_name NVARCHAR(50) NOT NULL,
+    e_address NVARCHAR(255) NOT NULL,
     e_phone VARCHAR(10) CHECK (LEN(e_phone) = 10),
-    e_gender VARCHAR(10) NOT NULL,
+    e_gender NVARCHAR(10) NOT NULL,
     e_status BIT DEFAULT 1
 );
 GO
 
 -- Tạo bảng ACCOUNT
 CREATE TABLE ACCOUNT (
-    a_username VARCHAR(50) CONSTRAINT PK_ACCOUNT PRIMARY KEY,
+    a_username NVARCHAR(50) CONSTRAINT PK_ACCOUNT PRIMARY KEY,
     a_password VARCHAR(25) NOT NULL,
     a_status BIT DEFAULT 1,
     e_id VARCHAR(10) CONSTRAINT FR_ACCOUNT_EMPLOYEE 
@@ -37,10 +37,10 @@ GO
 -- Tạo bảng PRODUCT
 CREATE TABLE PRODUCT (
     p_id VARCHAR(10) CONSTRAINT PK_PRODUCT PRIMARY KEY,
-    p_name VARCHAR(255) NOT NULL,
+    p_name NVARCHAR(255) NOT NULL,
     p_price DECIMAL(15, 0) CHECK (p_price > 0),
     p_image IMAGE NOT NULL,
-    p_size VARCHAR(10) NOT NULL,
+    p_size NVARCHAR(10) NOT NULL,
     p_quantity INT CHECK (p_quantity >=0),
     p_status BIT DEFAULT 1
 );
@@ -75,9 +75,9 @@ GO
 -- Tạo bảng SUPPLIER
 CREATE TABLE SUPPLIER (
     s_id VARCHAR(10) CONSTRAINT PK_SUPPLIER PRIMARY KEY,
-    s_name VARCHAR(255) NOT NULL,
+    s_name NVARCHAR(255) NOT NULL,
     s_phone VARCHAR(10) CHECK (LEN(s_phone) = 10),
-    s_address VARCHAR(255) NOT NULL,
+    s_address NVARCHAR(255) NOT NULL,
     s_status BIT DEFAULT 1
 );
 GO
