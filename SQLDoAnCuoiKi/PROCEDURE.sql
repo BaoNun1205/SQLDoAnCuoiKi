@@ -163,35 +163,57 @@ BEGIN
 END;
 
 --Customer
---Thêm khach hang
+--Them khach hang
 CREATE PROCEDURE proc_AddCustomer
-	@phone VARCHAR(10),
-	@name VARCHAR(255),	
-	@point DECIMAL(15, 0)
+    @phone VARCHAR(10),
+    @name VARCHAR(255),
+    @point DECIMAL(15, 0)
 AS
 BEGIN
-	BEGIN TRY
-		Begin Tran insert_Cus
-		INSERT INTO dbo.Customer VALUES(@phone, @name, @point, default)
-		Commit Tran insert_Cus
-	END TRY
-	BEGIN CATCH
-		print N'Gặp lỗi trong quá trình thêm khách hàng'
-		Rollback Tran insert_Cus
-	END CATCH
+    DECLARE @existingCustomer INT;
+    
+    -- Kiểm tra xem số điện thoại đã tồn tại trong bảng CUSTOMER chưa
+    SELECT @existingCustomer = COUNT(*) FROM CUSTOMER WHERE c_phone = @phone;
+
+    IF @existingCustomer = 0
+    BEGIN
+        BEGIN TRY
+            BEGIN TRAN insert_Cus
+            INSERT INTO dbo.CUSTOMER VALUES (@phone, @name, @point, 1);  -- Tạo mới và đặt c_status = 1
+            COMMIT TRAN insert_Cus
+        END TRY
+        BEGIN CATCH
+            PRINT N'Gặp lỗi trong quá trình thêm khách hàng mới.';
+            ROLLBACK TRAN insert_Cus
+        END CATCH
+    END
+    ELSE
+    BEGIN
+        -- Cập nhật c_status thành 1 nếu số điện thoại đã tồn tại
+        BEGIN TRY
+            BEGIN TRAN update_Status
+            UPDATE CUSTOMER SET c_status = 1 WHERE c_phone = @phone;
+            COMMIT TRAN update_Status
+        END TRY
+        BEGIN CATCH
+            PRINT N'Gặp lỗi trong quá trình cập nhật trạng thái.';
+            ROLLBACK TRAN update_Status
+        END CATCH
+    END
 END
 GO
 --Cập nhật khách hàng
 CREATE PROC proc_UpdateCustomer
 	@phone VARCHAR(10),
 	@name VARCHAR(255),	
-	@point DECIMAL(15, 0)
+	@point DECIMAL(15, 0),
+	@status bit
 AS
 BEGIN
 	Begin Try
 		Begin Tran update_Cus
 		UPDATE CUSTOMER 
-		SET c_name = @name, c_point = @point
+		SET c_name = @name, c_point = @point, c_status = @status
 		WHERE c_phone = @phone
 		Commit Tran update_Cus
 	End Try
@@ -245,13 +267,14 @@ CREATE PROC proc_UpdateEmployee
 	@name VARCHAR(255),	
 	@address VARCHAR(255),
 	@phone VARCHAR(10),
-	@gender VARCHAR(10)
+	@gender VARCHAR(10),
+	@status bit
 AS
 BEGIN
 	Begin Try
 		Begin Tran update_Employee
 		UPDATE EMPLOYEE 
-		SET e_name = @name, e_address = @address, e_phone = @phone, e_gender = @gender
+		SET e_name = @name, e_address = @address, e_phone = @phone, e_gender = @gender, e_status = @status
 		WHERE e_id = @id
 		Commit Tran update_Employee
 	End Try
