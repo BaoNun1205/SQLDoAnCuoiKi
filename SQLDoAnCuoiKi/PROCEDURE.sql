@@ -170,36 +170,15 @@ CREATE PROCEDURE proc_AddCustomer
     @point DECIMAL(15, 0)
 AS
 BEGIN
-    DECLARE @existingCustomer INT;
-    
-    -- Kiểm tra xem số điện thoại đã tồn tại trong bảng CUSTOMER chưa
-    SELECT @existingCustomer = COUNT(*) FROM CUSTOMER WHERE c_phone = @phone;
-
-    IF @existingCustomer = 0
-    BEGIN
-        BEGIN TRY
-            BEGIN TRAN insert_Cus
-            INSERT INTO dbo.CUSTOMER VALUES (@phone, @name, @point, 1);  -- Tạo mới và đặt c_status = 1
-            COMMIT TRAN insert_Cus
-        END TRY
-        BEGIN CATCH
-            PRINT N'Gặp lỗi trong quá trình thêm khách hàng mới.';
-            ROLLBACK TRAN insert_Cus
-        END CATCH
-    END
-    ELSE
-    BEGIN
-        -- Cập nhật c_status thành 1 nếu số điện thoại đã tồn tại
-        BEGIN TRY
-            BEGIN TRAN update_Status
-            UPDATE CUSTOMER SET c_status = 1 WHERE c_phone = @phone;
-            COMMIT TRAN update_Status
-        END TRY
-        BEGIN CATCH
-            PRINT N'Gặp lỗi trong quá trình cập nhật trạng thái.';
-            ROLLBACK TRAN update_Status
-        END CATCH
-    END
+	BEGIN TRY
+	    BEGIN TRAN insert_Cus
+	    INSERT INTO dbo.CUSTOMER VALUES (@phone, @name, @point, 1);  -- Tạo mới và đặt c_status = 1
+	    COMMIT TRAN insert_Cus
+	END TRY
+	BEGIN CATCH
+	    PRINT N'Gặp lỗi trong quá trình thêm khách hàng mới.';
+	    ROLLBACK TRAN insert_Cus
+	END CATCH
 END
 GO
 --Cập nhật khách hàng
