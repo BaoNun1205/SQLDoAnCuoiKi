@@ -129,3 +129,10 @@ ON ds.p_id = p.p_id
 WHERE sh.sh_status=1;
 
 GO
+CREATE VIEW V_INFO_SUPPLIER 
+AS
+SELECT s.s_id as "Mã nhà cung cấp",
+	 s.s_name as "Tên nhà cung cấp",
+	 s.s_phone as "Số điện thoại",
+	 s.s_address as "Địa chỉ"
+FROM SUPPLIER s WHERE s.s_status=1;
