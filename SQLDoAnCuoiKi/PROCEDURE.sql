@@ -164,23 +164,19 @@ END;
 
 --Customer
 --Them khach hang
-CREATE PROCEDURE proc_AddCustomer
-    @phone VARCHAR(10),
-    @name VARCHAR(255),
-    @point DECIMAL(15, 0)
+CREATE PROCEDURE [dbo].[proc_AddCustomer]
+	@SDT varchar(10),
+	@TenKH nvarchar(50),
+	@Diem DECIMAL(15, 0)
 AS
 BEGIN
-	BEGIN TRY
-	    BEGIN TRAN insert_Cus
-	    INSERT INTO dbo.CUSTOMER VALUES (@phone, @name, @point, 1);  -- Tạo mới và đặt c_status = 1
-	    COMMIT TRAN insert_Cus
-	END TRY
-	BEGIN CATCH
-	    PRINT N'Gặp lỗi trong quá trình thêm khách hàng mới.';
-	    ROLLBACK TRAN insert_Cus
-	END CATCH
+	IF EXISTS (SELECT 1 FROM CUSTOMER WHERE c_phone = @SDT)
+	BEGIN
+		RETURN;
+	END
+	INSERT INTO CUSTOMER(c_phone, c_name, c_point, c_status)
+	VALUES (@SDT , @TenKH, @Diem, 1)
 END
-GO
 --Cập nhật khách hàng
 CREATE PROC proc_UpdateCustomer
 	@phone VARCHAR(10),
@@ -240,20 +236,18 @@ BEGIN
 	END CATCH
 END
 GO
---Cập nhật nhân viên
 CREATE PROC proc_UpdateEmployee
 	@id VARCHAR(10),
 	@name VARCHAR(255),	
 	@address VARCHAR(255),
 	@phone VARCHAR(10),
-	@gender VARCHAR(10),
-	@status bit
+	@gender VARCHAR(10)
 AS
 BEGIN
 	Begin Try
 		Begin Tran update_Employee
 		UPDATE EMPLOYEE 
-		SET e_name = @name, e_address = @address, e_phone = @phone, e_gender = @gender, e_status = @status
+		SET e_name = @name, e_address = @address, e_phone = @phone, e_gender = @gender
 		WHERE e_id = @id
 		Commit Tran update_Employee
 	End Try
