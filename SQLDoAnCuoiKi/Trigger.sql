@@ -62,3 +62,40 @@ AS BEGIN
       SET p_quantity = p_quantity + @p_quantity
       WHERE p_id = @p_id
 END
+
+--Customer
+--Kiểm tra trước khi thêm và cập nhật khách hàng
+CREATE TRIGGER trg_CheckCustomer
+ON CUSTOMER
+AFTER INSERT, UPDATE
+AS
+BEGIN
+	--Kiểm tra số điện thoại
+	IF EXISTS (SELECT * FROM inserted WHERE TRIM(c_phone) = '')
+    BEGIN
+        RAISERROR('Số điện thoại không được để trống', 16, 1)
+        ROLLBACK TRANSACTION
+        RETURN
+    END
+	IF NOT EXISTS (SELECT * FROM CUSTOMER WHERE c_phone IN (SELECT c_phone FROM inserted))
+	BEGIN
+		RAISERROR('Số điện thoại đã tồn tại', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
+    -- Kiểm tra tên khách hàng
+    IF EXISTS (SELECT * FROM inserted WHERE TRIM(c_name) = '')
+    BEGIN
+        RAISERROR('Tên khách hàng không được để trống', 16, 1)
+        ROLLBACK TRANSACTION
+        RETURN
+    END
+
+    -- Kiểm tra điểm
+    IF EXISTS (SELECT * FROM inserted WHERE c_point <= 0)
+    BEGIN
+        RAISERROR('Điểm tích lũy không được âm', 16, 1)
+        ROLLBACK TRANSACTION
+        RETURN
+    END
+END;
