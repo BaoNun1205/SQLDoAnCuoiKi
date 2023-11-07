@@ -94,18 +94,14 @@ AS
 BEGIN
 	BEGIN TRY
 		BEGIN TRAN insert_Ship
-
-		-- Kiểm tra nếu shid chưa tồn tại, thì thêm vào bảng SHIPMENT
-		IF NOT EXISTS (SELECT sh_id FROM dbo.SHIPMENT WHERE sh_id = @shid)
-		BEGIN
-			INSERT INTO dbo.SHIPMENT VALUES(@shid, @sid, @imDate, default)
-		END
-
+		INSERT INTO dbo.SHIPMENT VALUES(@shid, @sid, @imDate, default)
 		COMMIT TRAN insert_Ship
 	END TRY
 	BEGIN CATCH
-		PRINT N'Gặp lỗi trong quá trình thêm lo hàng'
 		ROLLBACK TRAN insert_Ship
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
 	END CATCH
 END
 GO
@@ -128,11 +124,12 @@ BEGIN
 		COMMIT TRAN insert_DetailShip
 	END TRY
 	BEGIN CATCH
-		PRINT N'Gặp lỗi trong quá trình thêm thông tin'
 		ROLLBACK TRAN insert_DetailShip
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
 	END CATCH
 END
-GO
 
 --Xóa lô hàng
 CREATE PROC proc_DeleteShipment
