@@ -81,9 +81,9 @@ BEGIN
     END
 
     -- Kiểm tra điểm
-    IF EXISTS (SELECT * FROM inserted WHERE c_point <= 0)
+    IF EXISTS (SELECT * FROM inserted WHERE TRIM(c_point) = '')
     BEGIN
-        RAISERROR('Điểm tích lũy không được âm', 16, 1)
+        RAISERROR('Điểm tích lũy không được để trống', 16, 1)
         ROLLBACK TRANSACTION
         RETURN
     END
