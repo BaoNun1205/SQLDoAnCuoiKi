@@ -382,3 +382,17 @@ BEGIN
 END
 GO
 
+--Tạo Id tăng tự động cho bill
+CREATE PROCEDURE proc_CreateAutoBillID
+AS
+BEGIN
+    BEGIN TRY
+        SELECT CONCAT('B', RIGHT(CONCAT('000',ISNULL(right(max(b_id),4),0) + 1),4))
+                                            FROM BILL where b_id like 'B' + '%'
+    END TRY
+    BEGIN CATCH
+        PRINT 'Có lỗi xảy ra'
+        PRINT ERROR_MESSAGE();
+    END CATCH
+END
+GO
