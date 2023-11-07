@@ -17,8 +17,10 @@ BEGIN
 		Commit Tran insert_Pro
 	END TRY
 	BEGIN CATCH
-		print N'Gặp lỗi trong quá trình thêm mặt hàng'
 		Rollback Tran insert_Pro
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
 	END CATCH
 END
 GO
@@ -40,9 +42,11 @@ BEGIN
 		WHERE p_id = @pid
 		Commit Tran update_Pro
 	End Try
-	Begin Catch
-		Print N'Không thể cập nhật mặt hàng'
+	Begin Catch		
 		Rollback Tran update_Pro
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
 	End Catch
 END
 GO
