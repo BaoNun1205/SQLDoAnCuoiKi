@@ -6,14 +6,6 @@ ON PRODUCT
 AFTER INSERT, UPDATE
 AS
 BEGIN
-	
-	IF EXISTS (SELECT * FROM inserted WHERE TRIM(p_id) = '')
-    BEGIN
-        RAISERROR('Loại mặt hàng không được để trống', 16, 1)
-        ROLLBACK TRANSACTION
-        RETURN
-    END
-
     -- Kiểm tra p_name
     IF EXISTS (SELECT * FROM inserted WHERE TRIM(p_name) = '')
     BEGIN
@@ -22,26 +14,23 @@ BEGIN
         RETURN
     END
 
-    -- Kiểm tra p_price
-    IF EXISTS (SELECT * FROM inserted WHERE p_price <= 0)
-    BEGIN
-        RAISERROR('Giá mặt hàng phải lớn hơn 0', 16, 1)
-        ROLLBACK TRANSACTION
-        RETURN
-    END
+	-- Kiểm tra trùng tên
+	IF EXISTS (
+		SELECT 1
+		FROM PRODUCT p
+		INNER JOIN inserted i ON TRIM(p.p_name) = TRIM(i.p_name)
+		WHERE p.p_id <> i.p_id -- Loại trừ việc so sánh với chính bản ghi đang được cập nhật
+	)
+	BEGIN
+		RAISERROR('Tên mặt hàng đã tồn tại trong bảng', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
 
     -- Kiểm tra p_size
     IF EXISTS (SELECT * FROM inserted WHERE TRIM(p_size) = '')
     BEGIN
         RAISERROR('Kích thước mặt hàng không được để trống', 16, 1)
-        ROLLBACK TRANSACTION
-        RETURN
-    END
-
-    -- Kiểm tra p_quantity
-    IF EXISTS (SELECT * FROM inserted WHERE p_quantity < 0)
-    BEGIN
-        RAISERROR('Số lượng mặt hàng không được âm', 16, 1)
         ROLLBACK TRANSACTION
         RETURN
     END
