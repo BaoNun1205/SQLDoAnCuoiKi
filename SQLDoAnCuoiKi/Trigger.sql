@@ -36,6 +36,22 @@ BEGIN
     END
 END;
 
+--Kiểm tra thông tin lô hàng
+CREATE TRIGGER trg_CheckShipment
+ON SHIPMENT
+AFTER INSERT, UPDATE
+AS
+BEGIN
+	-- Kiểm tra ngày nhập lô hàng
+	IF NOT EXISTS (SELECT * FROM inserted WHERE 
+	(datediff(day,[sh_imDate],getdate())>=(0)))
+	 BEGIN
+		 RAISERROR ('Ngày nhập lô hàng không thể là trong tương lai', 16, 1)
+		 ROLLBACK TRANSACTION
+		 RETURN
+	 END
+END;
+
 --Cập nhật số lượng mặt hàng sau khi thêm vào kho thành công
 CREATE TRIGGER trig_UpdateWarehouse_AfterShip
 ON Detail_Shipment
