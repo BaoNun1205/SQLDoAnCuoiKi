@@ -68,8 +68,9 @@ SELECT b.b_id as"Mã hóa đơn",
 	c.c_phone as "Số điện thoại", 
 	c.c_name as "Tên khách hàng"  
 	FROM CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone
-WHERE b.b_id LIKE '%' + @b_id + '%' AND b_status = 1 );
-
+WHERE b.b_id LIKE '%' + @b_id + '%' AND b_status = 1 
+);
+GO
 
 --tìm kiếm hóa đơn theo sđt khách hàng
 CREATE FUNCTION func_timBillTheoSDT (@c_phone varchar(10))
@@ -84,16 +85,27 @@ RETURN
 	c.c_phone as "Số điện thoại", 
 	c.c_name as "Tên khách hàng" 
 	FROM CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone
-	WHERE c.c_phone LIKE '%' + @c_phone + '%' AND b_status = 1 );
+	WHERE c.c_phone LIKE '%' + @c_phone + '%' AND b_status = 1 
+);
+GO
 
 --tìm kiếm hóa đơn theo mã sp
 GO
 CREATE FUNCTION func_timBillTheoMaMatHang(@p_id varchar(10))	
 RETURNS TABLE
 AS
-RETURN ( SELECT b.b_id, b.b_date, b.b_totalpay, b.b_discount, c.c_phone, c.c_name  
+RETURN 
+( 
+	SELECT b.b_id as "Mã hóa đơn", 
+	b.b_date as "Ngày thanh toán", 
+	b.b_totalpay as "Tổng thanh toán", 
+	b.b_discount as "Giảm giá", 
+	c.c_phone as "Số điện thoại", 
+	c.c_name as "Tên khách hàng"  
 	FROM (CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone) INNER JOIN DETAIL_BILL db ON db.b_id = b.b_id
-WHERE p_id LIKE '%' + @p_id + '%' AND b_status = 1 );
+	WHERE p_id LIKE '%' + @p_id + '%' AND b_status = 1 
+);
+GO
 
 --tìm kiếm hóa đơn theo ngày
 CREATE FUNCTION func_timBillTheoNgay
@@ -105,10 +117,14 @@ RETURNS TABLE
 AS
 RETURN
 (
-    SELECT b.b_id, b.b_date, b.b_totalpay, b.b_discount, c.c_phone, c.c_name
-    FROM CUSTOMER c
-    INNER JOIN BILL b ON c.c_phone = b.c_phone
-    WHERE b.b_status = 1 AND b.b_date BETWEEN @ngayBatDau AND @ngayKetThuc
+    SELECT b.b_id as "Mã hóa đơn", 
+	b.b_date as "Ngày thanh toán", 
+	b.b_totalpay as "Tổng thanh toán", 
+	b.b_discount as "Giảm giá", 
+	c.c_phone as "Số điện thoại", 
+	c.c_name as "Tên khách hàng" 
+	FROM CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone
+	WHERE b.b_status = 1 AND b_date BETWEEN @ngayBatDau AND @ngayKetThuc
 );
 
 --Customer
