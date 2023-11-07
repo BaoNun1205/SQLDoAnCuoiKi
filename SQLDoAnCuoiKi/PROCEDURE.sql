@@ -226,6 +226,10 @@ CREATE PROCEDURE proc_AddEmployee
 AS
 BEGIN
 	BEGIN TRY
+		IF EXISTS (SELECT 1 FROM EMPLOYEE WHERE e_id = @id)
+		BEGIN
+			RETURN;
+		END
 		Begin Tran insert_Employee
 		INSERT INTO dbo.EMPLOYEE VALUES(@id, @name, @address, @phone, @gender, default)
 		Commit Tran insert_Employee
@@ -236,6 +240,7 @@ BEGIN
 	END CATCH
 END
 GO
+--Cap nhat nhan vien
 CREATE PROC proc_UpdateEmployee
 	@id VARCHAR(10),
 	@name VARCHAR(255),	
