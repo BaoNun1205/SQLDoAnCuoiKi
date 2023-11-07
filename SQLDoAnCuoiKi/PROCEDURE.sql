@@ -174,12 +174,18 @@ CREATE PROCEDURE [dbo].[proc_AddCustomer]
 	@Diem DECIMAL(15, 0)
 AS
 BEGIN
-	IF EXISTS (SELECT 1 FROM CUSTOMER WHERE c_phone = @SDT)
-	BEGIN
-		RETURN;
-	END
-	INSERT INTO CUSTOMER(c_phone, c_name, c_point, c_status)
-	VALUES (@SDT , @TenKH, @Diem, 1)
+	Begin Try
+		Begin Tran insert_Cus
+		INSERT INTO CUSTOMER(c_phone, c_name, c_point, c_status)
+		VALUES (@SDT , @TenKH, @Diem, 1)
+		Commit Tran insert_Cus
+	End Try
+	Begin Catch
+		Rollback Tran insert_Cus
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
+	End Catch
 END
 --Cập nhật khách hàng
 CREATE PROC proc_UpdateCustomer
@@ -197,8 +203,10 @@ BEGIN
 		Commit Tran update_Cus
 	End Try
 	Begin Catch
-		Print N'Không thể cập nhật khách hàng'
 		Rollback Tran update_Cus
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
 	End Catch
 END
 GO
@@ -230,17 +238,15 @@ CREATE PROCEDURE proc_AddEmployee
 AS
 BEGIN
 	BEGIN TRY
-		IF EXISTS (SELECT 1 FROM EMPLOYEE WHERE e_id = @id)
-		BEGIN
-			RETURN;
-		END
 		Begin Tran insert_Employee
 		INSERT INTO dbo.EMPLOYEE VALUES(@id, @name, @address, @phone, @gender, default)
 		Commit Tran insert_Employee
 	END TRY
 	BEGIN CATCH
-		print N'Gặp lỗi trong quá trình thêm nhân viên'
 		Rollback Tran insert_Employee
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
 	END CATCH
 END
 GO
@@ -261,8 +267,10 @@ BEGIN
 		Commit Tran update_Employee
 	End Try
 	Begin Catch
-		Print N'Không thể cập nhật nhân viên'
 		Rollback Tran update_Employee
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
 	End Catch
 END
 GO
