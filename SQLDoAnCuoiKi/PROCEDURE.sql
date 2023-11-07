@@ -338,3 +338,47 @@ BEGIN
     END CATCH;
 END;
 GO
+
+--Tạo bill khi thanh toán
+CREATE PROCEDURE proc_AddBill
+	@b_id VARCHAR(10),
+	@date DATE, 
+	@totalpay DECIMAL(15, 0),
+	@discount DECIMAL(15, 0),
+	@c_phone VARCHAR(10),
+	@e_id VARCHAR(10)
+AS
+BEGIN
+	BEGIN TRY
+		Begin Tran insert_Bill
+		INSERT INTO dbo.Bill VALUES(@b_id, @date, @totalpay, @discount, default, @c_phone, @e_id)
+		Commit Tran insert_Bill
+	END TRY
+	BEGIN CATCH
+		print N'Gặp lỗi trong quá trình thêm Bill'
+		print error_message()
+		Rollback Tran insert_Bill
+	END CATCH
+END
+GO
+
+--Tạo DetailBill khi them Bill
+CREATE PROCEDURE proc_AddDetailBill
+	@b_id VARCHAR(10),
+	@p_id VARCHAR(10),
+	@db_quantity INT
+AS
+BEGIN
+	BEGIN TRY
+		Begin Tran insert_DetailBill
+		INSERT INTO dbo.DETAIL_BILL VALUES(@b_id, @p_id, @db_quantity,default)
+		Commit Tran insert_DetailBill
+	END TRY
+	BEGIN CATCH
+		print N'Gặp lỗi trong quá trình thêm chi tiết Bill'
+		print error_message()
+		Rollback Tran insert_Bill
+	END CATCH
+END
+GO
+
