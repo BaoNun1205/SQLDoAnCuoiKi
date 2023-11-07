@@ -302,18 +302,3 @@ BEGIN
     END CATCH;
 END;
 GO
---tìm hóa đơn bằng ngày tạo hóa đơn
-CREATE PROCEDURE proc_timBillTheoNgay
-	@ngayBatDau DATE,
-	@ngayKetThuc DATE
-AS
-BEGIN
-	SELECT b.b_id as "Mã hóa đơn", 
-	b.b_date as "Ngày thanh toán", 
-	b.b_totalpay as "Tổng thanh toán", 
-	b.b_discount as "Giảm giá", 
-	c.c_phone as "Số điện thoại", 
-	c.c_name as "Tên khách hàng" 
-	FROM CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone
-	WHERE b.b_status = 1 AND b_date BETWEEN @ngayBatDau AND @ngayKetThuc
-END;
