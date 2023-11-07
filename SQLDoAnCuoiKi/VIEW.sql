@@ -12,7 +12,7 @@ SELECT
 FROM PRODUCT p
 WHERE p.p_status = 1
 
---Xem Diem khach hang
+--Xem thong tin khach hang con hoat dong
 CREATE VIEW V_CUSTOMER_POINT 
 AS
 SELECT c.c_phone AS "Số điện thoại",
