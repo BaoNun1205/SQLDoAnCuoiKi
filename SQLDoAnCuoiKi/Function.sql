@@ -138,3 +138,13 @@ RETURN
     FROM CUSTOMER
     WHERE c_phone = @phone
 );
+--Tim kiem khach hang theo ten
+CREATE FUNCTION [dbo].[SearchCustomerByName](@name nvarchar(50))
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT c_phone, c_name, c_point, c_status
+    FROM CUSTOMER
+    WHERE c_name LIKE N'%' + @name + '%'
+);
