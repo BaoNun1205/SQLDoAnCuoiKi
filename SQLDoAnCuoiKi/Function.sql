@@ -148,3 +148,25 @@ RETURN
     FROM CUSTOMER
     WHERE c_name LIKE N'%' + @name + '%'
 );
+
+--Employee
+--Tim kiem nhan vien theo id
+CREATE FUNCTION [dbo].[SearchEmployeeByID](@id varchar(10))
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT e_id, e_name, e_address, e_phone, e_gender
+    FROM EMPLOYEE
+    WHERE e_id LIKE '%' + @id + '%' and e_status = 1
+);
+--Tim kiem nhan vien theo ten
+CREATE FUNCTION [dbo].[SearchEmployeeByName](@name nvarchar(50))
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT e_id, e_name, e_address, e_phone, e_gender
+    FROM EMPLOYEE
+    WHERE e_name LIKE N'%' + @name + '%' and e_status = 1
+);
