@@ -61,7 +61,13 @@ RETURNS TABLE
 AS
 RETURN 
 (
-SELECT b.b_id, b.b_date, b.b_totalpay, b.b_discount, c.c_phone, c.c_name  FROM CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone
+SELECT b.b_id as"Mã hóa đơn", 
+	b.b_date as "Ngày thanh toán", 
+	b.b_totalpay as "Tổng thanh toán", 
+	b.b_discount as "Giảm giá", 
+	c.c_phone as "Số điện thoại", 
+	c.c_name as "Tên khách hàng"  
+	FROM CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone
 WHERE b.b_id LIKE '%' + @b_id + '%' AND b_status = 1 );
 
 
@@ -71,8 +77,14 @@ RETURNS TABLE
 AS
 RETURN 
 (
-	SELECT b.b_id, b.b_date, b.b_totalpay, b.b_discount, c.c_phone, c.c_name  FROM CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone
-WHERE c.c_phone LIKE '%' + @c_phone + '%' AND b_status = 1 );
+	SELECT b.b_id as "Mã hóa đơn", 
+	b.b_date as "Ngày thanh toán", 
+	b.b_totalpay as "Tổng thanh toán", 
+	b.b_discount as "Giảm giá", 
+	c.c_phone as "Số điện thoại", 
+	c.c_name as "Tên khách hàng" 
+	FROM CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone
+	WHERE c.c_phone LIKE '%' + @c_phone + '%' AND b_status = 1 );
 
 --tìm kiếm hóa đơn theo mã sp
 GO
