@@ -79,3 +79,14 @@ AS
 RETURN ( SELECT b.b_id, b.b_date, b.b_totalpay, b.b_discount, c.c_phone, c.c_name  
 	FROM (CUSTOMER c INNER JOIN BILL b ON c.c_phone = b.c_phone) INNER JOIN DETAIL_BILL db ON db.b_id = b.b_id
 	WHERE b.b_status = 1 AND db.p_id = @p_id);
+--Customer
+--Tim kiem khach hang theo sdt
+CREATE FUNCTION [dbo].[SearchCustomerByPhone](@phone varchar(10))
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT c_phone, c_name, c_point, c_status
+    FROM CUSTOMER
+    WHERE c_phone = @phone
+);
