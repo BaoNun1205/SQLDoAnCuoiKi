@@ -75,19 +75,6 @@ ON CUSTOMER
 AFTER INSERT, UPDATE
 AS
 BEGIN
-	--Kiểm tra số điện thoại
-	IF EXISTS (SELECT * FROM inserted WHERE TRIM(c_phone) = '')
-    BEGIN
-        RAISERROR('Số điện thoại không được để trống', 16, 1)
-        ROLLBACK TRANSACTION
-        RETURN
-    END
-	IF NOT EXISTS (SELECT * FROM CUSTOMER WHERE c_phone IN (SELECT c_phone FROM inserted))
-	BEGIN
-		RAISERROR('Số điện thoại đã tồn tại', 16, 1)
-		ROLLBACK TRANSACTION
-		RETURN
-	END
     -- Kiểm tra tên khách hàng
     IF EXISTS (SELECT * FROM inserted WHERE TRIM(c_name) = '')
     BEGIN
@@ -95,11 +82,53 @@ BEGIN
         ROLLBACK TRANSACTION
         RETURN
     END
+END;
 
-    -- Kiểm tra điểm
-    IF EXISTS (SELECT * FROM inserted WHERE TRIM(c_point) = '')
+--Employee
+--Kiểm tra trước khi thêm và cập nhật nhân viên
+CREATE TRIGGER trg_CheckEmployee
+ON EMPLOYEE
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    -- Kiểm tra tên nhân viên
+    IF EXISTS (SELECT * FROM inserted WHERE TRIM(e_name) = '')
     BEGIN
-        RAISERROR('Điểm tích lũy không được để trống', 16, 1)
+        RAISERROR('Tên nhân viên không được để trống', 16, 1)
+        ROLLBACK TRANSACTION
+        RETURN
+    END
+	-- Kiểm tra giới tính nhân viên
+    IF EXISTS (SELECT * FROM inserted WHERE TRIM(e_gender) = '')
+    BEGIN
+        RAISERROR('Giới tính nhân viên không được để trống', 16, 1)
+        ROLLBACK TRANSACTION
+        RETURN
+    END
+	-- Kiểm tra số điện thoại nhân viên
+    IF EXISTS (SELECT * FROM inserted WHERE TRIM(e_phone) = '')
+    BEGIN
+        RAISERROR('Số điện thoại nhân viên không được để trống', 16, 1)
+        ROLLBACK TRANSACTION
+        RETURN
+    END
+
+	IF EXISTS (
+		SELECT 1
+		FROM EMPLOYEE e
+		INNER JOIN inserted i ON TRIM(e.e_phone) = TRIM(i.e_phone)
+		WHERE e.e_id <> i.e_id -- Loại trừ việc so sánh với chính bản ghi đang được cập nhật
+	)
+	BEGIN
+		RAISERROR('Số điện thoại đã được sử dụng', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
+
+	-- Kiểm tra địa chỉ nhân viên
+    IF EXISTS (SELECT * FROM inserted WHERE TRIM(e_address) = '')
+    BEGIN
+        RAISERROR('Địa chỉ không được để trống', 16, 1)
         ROLLBACK TRANSACTION
         RETURN
     END
