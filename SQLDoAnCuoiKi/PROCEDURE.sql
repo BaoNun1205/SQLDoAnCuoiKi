@@ -307,12 +307,55 @@ BEGIN
 		Commit Tran insert_Sup
 	END TRY
 	BEGIN CATCH
-		print N'Gặp lỗi trong quá trình thêm nhà cung cấp'
 		Rollback Tran insert_Sup
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
 	END CATCH
 END
 GO
 
+--xóa supplier 
+CREATE PROC proc_DeleteSupplier
+	@s_id VARCHAR(10)
+AS
+BEGIN
+	Begin Try
+		Begin Tran delete_Supplier
+		Update SUPPLIER Set s_status = 0 WHERE SUPPLIER.s_id = @s_id
+		Commit Tran delete_Supplier
+	End Try
+	Begin Catch
+		Print N'Không thể xóa nhà cung cấp' 
+		Rollback Tran delete_Supplier
+	End Catch
+END
+GO
+	
+--cập nhật supplier
+CREATE PROC proc_updateSuppier
+	@s_id varchar(10),
+	@s_name varchar(255),
+	@s_phone varchar(10),
+	@s_address varchar(255)
+AS
+BEGIN
+	Begin Try
+		Begin Tran update_Pro
+		UPDATE SUPPLIER 
+		SET s_name = @s_name, s_phone = @s_phone, s_address = @s_address
+		WHERE s_id= @s_id
+		Commit Tran update_Pro
+	End Try
+	Begin Catch
+		Rollback Tran update_Pro
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
+	End Catch
+END
+GO
+	
 --Tạo mã nhà cung cấp tự động
 CREATE PROCEDURE proc_CreateAutoSupplierID
 AS
@@ -410,43 +453,5 @@ BEGIN
         PRINT 'Có lỗi xảy ra'
         PRINT ERROR_MESSAGE();
     END CATCH
-END
-GO
-
---xóa supplier 
-CREATE PROC proc_DeleteSupplier
-	@s_id VARCHAR(10)
-AS
-BEGIN
-	Begin Try
-		Begin Tran delete_Supplier
-		Update SUPPLIER Set s_status = 0 WHERE SUPPLIER.s_id = @s_id
-		Commit Tran delete_Supplier
-	End Try
-	Begin Catch
-		Print N'Không thể xóa nhà cung cấp' 
-		Rollback Tran delete_Supplier
-	End Catch
-END
-GO
---cập nhật supplier
-CREATE PROC proc_updateSuppier
-	@s_id varchar(10),
-	@s_name varchar(255),
-	@s_phone varchar(10),
-	@s_address varchar(255)
-AS
-BEGIN
-	Begin Try
-		Begin Tran update_Supplier
-		UPDATE SUPPLIER 
-		SET s_name = @s_name, s_phone = @s_phone, s_address = @s_address
-		WHERE s_id= @s_id
-		Commit Tran update_Supplier
-	End Try
-	Begin Catch
-		Print N'Không thể cập nhật thông tin'
-		Rollback Tran update_Supplier
-	End Catch
 END
 GO
