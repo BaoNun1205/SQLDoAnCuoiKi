@@ -158,8 +158,8 @@ CREATE PROCEDURE proc_CreateAutoShipmentID
 AS
 BEGIN
     BEGIN TRY
-        SELECT CONCAT(@prefix, RIGHT(CONCAT('000',ISNULL(right(max(sh_id),4),0) + 1),4))
-                                            FROM SHIPMENT where sh_id like @prefix + '%'
+        SELECT CONCAT('SH', RIGHT(CONCAT('000',ISNULL(right(max(sh_id),4),0) + 1),4))
+                                            FROM SHIPMENT where sh_id like 'SH' + '%'
     END TRY
     BEGIN CATCH
         PRINT 'Có lỗi xảy ra'
