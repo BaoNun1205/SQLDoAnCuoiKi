@@ -39,7 +39,7 @@ END;
 --Kiểm tra thông tin lô hàng
 CREATE TRIGGER trg_CheckShipment
 ON SHIPMENT
-AFTER INSERT, UPDATE
+AFTER INSERT
 AS
 BEGIN
 	-- Kiểm tra ngày nhập lô hàng
