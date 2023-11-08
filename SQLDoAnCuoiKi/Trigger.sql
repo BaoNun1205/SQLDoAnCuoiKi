@@ -127,6 +127,7 @@ BEGIN
     END
 END;
 
+--Bill
 GO
 CREATE TRIGGER trg_CheckBill
 ON BILL
@@ -142,3 +143,26 @@ BEGIN
     END
 END;
 GO
+
+--SUPPILIER
+CREATE TRIGGER trg_CheckSuppiler
+ON SUPPLIER
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    -- Kiểm tra s_name
+    IF (EXISTS (SELECT * FROM INSERTED WHERE s_name = ''))
+    BEGIN
+        RAISERROR('Tên nhà cung cấp không được để trống.', 16, 1);
+		ROLLBACK TRANSACTION
+        RETURN
+    END
+
+    -- Kiểm tra s_address
+    IF (EXISTS (SELECT * FROM INSERTED WHERE s_address = ''))
+    BEGIN
+        RAISERROR('Địa chỉ nhà cung cấp không được để trống.', 16, 1);
+		ROLLBACK TRANSACTION
+        RETURN
+    END
+END;
