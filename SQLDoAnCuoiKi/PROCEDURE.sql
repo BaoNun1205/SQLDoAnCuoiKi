@@ -137,16 +137,20 @@ CREATE PROC proc_DeleteShipment
 AS
 BEGIN
 	Begin Try
-		Begin Tran delete_DetailShip
+		Begin Tran delete_Ship
+
+		--Xóa dữ liệu tương ứng trong chi tiết lô hàng
+		Update DETAIL_SHIPMENT Set ds_status = 0 WHERE sh_id = @shid
+
+		--Xóa lô hàng
 		Update SHIPMENT Set sh_status = 0 WHERE sh_id = @shid
-		Commit Tran delete_DetailShip
+		Commit Tran delete_Ship
 	End Try
 	Begin Catch
 		Print N'Không thể xóa lô hàng' 
-		Rollback Tran delete_DetailShip
+		Rollback Tran delete_Ship
 	End Catch
 END
-GO
 
 --tạo mã lô hàng tự động
 CREATE PROCEDURE proc_CreateAutoShipmentID
