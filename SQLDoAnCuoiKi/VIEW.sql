@@ -15,18 +15,18 @@ WHERE p.p_status = 1
 --Xem thong tin khach hang con hoat dong
 CREATE VIEW V_CUSTOMER_POINT 
 AS
-SELECT c.c_phone AS "Số điện thoại",
-       c.c_name AS "Tên khách hàng",
-       c.c_point AS "Điểm tích lũy"
+SELECT c.c_phone,
+       c.c_name,
+       c.c_point
 FROM CUSTOMER c
 WHERE c.c_status = 1;
 GO
 --Xem thong tin khach hang khong hoat dong
-CREATE VIEW V_CUSTOMERNOACTIVE 
+CREATE VIEW V_CUSTOMERINACTIVE 
 AS
-SELECT c.c_phone AS "Số điện thoại",
-       c.c_name AS "Tên khách hàng",
-       c.c_point AS "Điểm tích lũy"
+SELECT c.c_phone,
+       c.c_name,
+       c.c_point
 FROM CUSTOMER c
 WHERE c.c_status = 0;
 GO
