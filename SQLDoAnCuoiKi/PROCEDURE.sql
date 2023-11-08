@@ -460,15 +460,15 @@ CREATE PROC proc_updateSuppier
 AS
 BEGIN
 	Begin Try
-		Begin Tran update_Pro
+		Begin Tran update_Supplier
 		UPDATE SUPPLIER 
 		SET s_name = @s_name, s_phone = @s_phone, s_address = @s_address
 		WHERE s_id= @s_id
-		Commit Tran update_Pro
+		Commit Tran update_Supplier
 	End Try
 	Begin Catch
 		Print N'Không thể cập nhật thông tin'
-		Rollback Tran update_Pro
+		Rollback Tran update_Supplier
 	End Catch
 END
 GO
