@@ -431,3 +431,41 @@ BEGIN
     END CATCH
 END
 GO
+
+--xóa supplier 
+CREATE PROC proc_DeleteSupplier
+	@s_id VARCHAR(10)
+AS
+BEGIN
+	Begin Try
+		Begin Tran delete_Supplier
+		Update SUPPLIER Set s_status = 0 WHERE SUPPLIER.s_id = @s_id
+		Commit Tran delete_Supplier
+	End Try
+	Begin Catch
+		Print N'Không thể xóa nhà cung cấp' 
+		Rollback Tran delete_Supplier
+	End Catch
+END
+GO
+--cập nhật supplier
+CREATE PROC proc_updateSuppier
+	@s_id varchar(10),
+	@s_name varchar(255),
+	@s_phone varchar(10),
+	@s_address varchar(255)
+AS
+BEGIN
+	Begin Try
+		Begin Tran update_Pro
+		UPDATE SUPPLIER 
+		SET s_name = @s_name, s_phone = @s_phone, s_address = @s_address
+		WHERE s_id= @s_id
+		Commit Tran update_Pro
+	End Try
+	Begin Catch
+		Print N'Không thể cập nhật lô hàng'
+		Rollback Tran update_Pro
+	End Catch
+END
+GO
