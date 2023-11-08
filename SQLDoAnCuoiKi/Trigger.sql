@@ -133,3 +133,19 @@ BEGIN
         RETURN
     END
 END;
+
+GO
+CREATE TRIGGER trg_CheckBill
+ON BILL
+AFTER INSERT
+AS
+BEGIN
+    -- Kiểm tra totalpay
+    IF EXISTS (SELECT * FROM inserted WHERE b_totalpay = 0)
+    BEGIN
+        RAISERROR('Số tiền thanh toán phải lớn hơn 0', 16, 1)
+        ROLLBACK TRANSACTION
+        RETURN
+    END
+END;
+GO
