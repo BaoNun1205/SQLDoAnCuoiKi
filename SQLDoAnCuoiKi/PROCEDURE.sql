@@ -467,7 +467,7 @@ BEGIN
 		Commit Tran update_Pro
 	End Try
 	Begin Catch
-		Print N'Không thể cập nhật lô hàng'
+		Print N'Không thể cập nhật thông tin'
 		Rollback Tran update_Pro
 	End Catch
 END
