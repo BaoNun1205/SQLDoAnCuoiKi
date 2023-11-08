@@ -126,22 +126,6 @@ BEGIN
         RETURN
     END
 END;
-
---Bill
-GO
-CREATE TRIGGER trg_CheckBill
-ON BILL
-AFTER INSERT
-AS
-BEGIN
-    -- Kiểm tra totalpay
-    IF EXISTS (SELECT * FROM inserted WHERE b_totalpay = 0)
-    BEGIN
-        RAISERROR('Số tiền thanh toán phải lớn hơn 0', 16, 1)
-        ROLLBACK TRANSACTION
-        RETURN
-    END
-END;
 GO
 
 --SUPPILIER
@@ -166,3 +150,56 @@ BEGIN
         RETURN
     END
 END;
+GO
+
+--trigger tự trừ hàng trong kho khi mua
+CREATE TRIGGER Sub_Product
+ON DETAIL_BILL
+AFTER INSERT
+AS
+BEGIN
+	DECLARE @p_id VARCHAR(10)
+	DECLARE @db_quantity INT
+
+	Select @p_id = i.p_id, @db_quantity = i.db_quantity
+	from inserted i
+
+	UPDATE PRODUCT
+	SET p_quantity = p_quantity - @db_quantity
+	WHERE p_id = @p_id
+END
+GO
+
+--Cập nhật điểm cho khách hàng
+CREATE TRIGGER trg_UpdatePoint
+ON BILL
+AFTER INSERT 
+AS 
+BEGIN
+	DECLARE @b_id VARCHAR(10)
+	DECLARE @c_point DECIMAL(15, 0)
+	DECLARE @c_phone VARCHAR(10)
+	DECLARE @b_totalpay DECIMAL(15, 0)
+	DECLARE @b_discount DECIMAL(15, 0)
+	DECLARE @totalpay DECIMAL(15, 0)
+
+	Select @b_id = i.b_id, @c_phone = i.c_phone, @b_totalpay = i.b_totalpay, @b_discount = i.b_discount
+	from inserted i
+	SELECT @c_point = c.c_point FROM CUSTOMER c WHERE c_phone = @c_phone
+
+	UPDATE CUSTOMER
+	SET c_point = CASE
+		WHEN @b_totalpay - @b_discount - @c_point > 0
+			THEN (@b_totalpay - @b_discount - @c_point) * 0.02
+		ELSE @c_point - (@b_totalpay - @b_discount)  + ((@b_totalpay - @b_discount) * 0.02)
+		END
+	WHERE c_phone = @c_phone;
+	UPDATE BILL
+	SET b_totalpay = CASE
+		WHEN @b_totalpay - @b_discount - @c_point > 0
+			THEN @b_totalpay - @b_discount - @c_point
+		ELSE 0
+		END
+	WHERE b_id = @b_id
+END
+GO
