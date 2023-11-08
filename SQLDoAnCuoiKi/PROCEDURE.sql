@@ -291,28 +291,6 @@ BEGIN
 	End Catch
 END
 GO
---Tim nhan vien
---tìm mặt hàng bằng ID
-CREATE PROCEDURE proc_FindEmployeeByID
-    @id VARCHAR(10)
-AS
-BEGIN
-    BEGIN TRY
-        SELECT p_id as "Mã mặt hàng", 
-			   p_name as "Tên mặt hàng",
-			   p_price as "Giá",
-			   p_image,
-			   p_size as "Kích thước",
-			   p_quantity as "Số lượng"
-        FROM EMPLOYEE
-        WHERE p_id LIKE '%' + @idtype + '%' AND p_status = 1;
-    END TRY
-    BEGIN CATCH
-        PRINT 'Có lỗi xảy ra. Hãy kiểm tra xem mặt hàng có tồn tại không.'
-        PRINT ERROR_MESSAGE();
-    END CATCH;
-END;
-GO
 
 --SUPPERLIER
 --Thêm nhà cung cấp
