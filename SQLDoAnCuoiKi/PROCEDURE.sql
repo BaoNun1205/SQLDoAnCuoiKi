@@ -333,7 +333,7 @@ END
 GO
 	
 --cập nhật supplier
-CREATE PROC proc_updateSuppier
+CREATE PROC proc_updateSupplier
 	@s_id varchar(10),
 	@s_name varchar(255),
 	@s_phone varchar(10),
