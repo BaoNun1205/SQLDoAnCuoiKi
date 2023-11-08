@@ -154,7 +154,6 @@ END
 
 --tạo mã lô hàng tự động
 CREATE PROCEDURE proc_CreateAutoShipmentID
-    @prefix VARCHAR(10)
 AS
 BEGIN
     BEGIN TRY
