@@ -63,13 +63,15 @@ GO
 --Xem chi tiet hoa don
 CREATE VIEW V_INFO_DETAIL_BILL
 AS
-SELECT d.b_id as "Mã hóa đơn",
-	 p.p_id as "Mã sản phẩm",
-	 p.p_name as "Tên sản phẩm",
-	 p.p_price as "Giá",
-	 d.db_quantity as "Số lượng"
+SELECT 	b.b_id as "Mã hóa đơn",
+	p.p_id as "Mã mặt hàng",
+	p.p_name as "Tên sản phẩm",
+	p.p_price as "Giá",
+	d.db_quantity as "Số lượng",
+	d.db_quantity * p.p_price  as "Thành tiền"
 FROM (DETAIL_BILL d INNER JOIN PRODUCT p ON d.p_id = p.p_id) INNER JOIN BILL b ON b.b_id = d.b_id
 WHERE b.b_status = 1
+	 
 
 GO
 --Xem so luong mat hang ban duoc
