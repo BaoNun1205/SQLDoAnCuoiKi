@@ -106,13 +106,6 @@ BEGIN
         RETURN
     END
 	-- Kiểm tra số điện thoại nhân viên
-    IF EXISTS (SELECT * FROM inserted WHERE TRIM(e_phone) = '')
-    BEGIN
-        RAISERROR('Số điện thoại nhân viên không được để trống', 16, 1)
-        ROLLBACK TRANSACTION
-        RETURN
-    END
-
 	IF EXISTS (
 		SELECT 1
 		FROM EMPLOYEE e
