@@ -12,12 +12,12 @@ CREATE PROCEDURE proc_AddProduct
 AS
 BEGIN
 	BEGIN TRY
-		Begin Tran insert_Proc
+		Begin Tran insert_Pro
 		INSERT INTO dbo.Product VALUES(@pid, @name, @price, @image, @size, @quantity, default)
-		Commit Tran insert_Proc
+		Commit Tran insert_Pro
 	END TRY
 	BEGIN CATCH
-		Rollback Tran insert_Proc
+		Rollback Tran insert_Pro
 		DECLARE @err NVARCHAR(MAX)
 		SELECT @err = ERROR_MESSAGE()
 		RAISERROR(@err, 16, 1)
@@ -36,14 +36,14 @@ CREATE PROC proc_UpdateProduct
 AS
 BEGIN
 	Begin Try
-		Begin Tran update_Proc
+		Begin Tran update_Pro
 		UPDATE Product 
 		SET p_name = @name, p_price = @price, p_image = @image, p_size = @size, p_quantity = @quantity
 		WHERE p_id = @pid
-		Commit Tran update_Proc
+		Commit Tran update_Pro
 	End Try
 	Begin Catch		
-		Rollback Tran update_Proc
+		Rollback Tran update_Pro
 		DECLARE @err NVARCHAR(MAX)
 		SELECT @err = ERROR_MESSAGE()
 		RAISERROR(@err, 16, 1)
@@ -57,13 +57,13 @@ CREATE PROC proc_DeleteProduct
 AS
 BEGIN
 	Begin Try
-		Begin Tran delete_Proc
+		Begin Tran delete_Pro
 		Update Product Set p_status = 0 WHERE Product.p_id = @pid
-		Commit Tran delete_Proc
+		Commit Tran delete_Pro
 	End Try
 	Begin Catch
 		Print N'Không thể xóa mặt hàng' 
-		Rollback Tran delete_Proc
+		Rollback Tran delete_Pro
 	End Catch
 END
 GO
@@ -93,12 +93,12 @@ CREATE PROCEDURE proc_AddShipment
 AS
 BEGIN
 	BEGIN TRY
-		BEGIN TRAN insert_Proc
+		BEGIN TRAN insert_Ship
 		INSERT INTO dbo.SHIPMENT VALUES(@shid, @sid, @imDate, default)
-		COMMIT TRAN insert_Proc
+		COMMIT TRAN insert_Ship
 	END TRY
 	BEGIN CATCH
-		ROLLBACK TRAN insert_Proc
+		ROLLBACK TRAN insert_Ship
 		DECLARE @err NVARCHAR(MAX)
 		SELECT @err = ERROR_MESSAGE()
 		RAISERROR(@err, 16, 1)
@@ -116,15 +116,15 @@ CREATE PROCEDURE proc_AddDetailShipment
 AS
 BEGIN
 	BEGIN TRY
-		BEGIN TRAN insert_Proc
+		BEGIN TRAN insert_DetailShip
 
 		-- Thêm dữ liệu vào bảng DETAIL_SHIPMENT
 		INSERT INTO dbo.DETAIL_SHIPMENT VALUES(@shid, @pid, @imPrice, @quantity, default)
 
-		COMMIT TRAN insert_Proc
+		COMMIT TRAN insert_DetailShip
 	END TRY
 	BEGIN CATCH
-		ROLLBACK TRAN insert_Proc
+		ROLLBACK TRAN insert_DetailShip
 		DECLARE @err NVARCHAR(MAX)
 		SELECT @err = ERROR_MESSAGE()
 		RAISERROR(@err, 16, 1)
@@ -137,13 +137,13 @@ CREATE PROC proc_DeleteShipment
 AS
 BEGIN
 	Begin Try
-		Begin Tran delete_Proc
+		Begin Tran delete_DetailShip
 		Update SHIPMENT Set sh_status = 0 WHERE sh_id = @shid
-		Commit Tran delete_Proc
+		Commit Tran delete_DetailShip
 	End Try
 	Begin Catch
 		Print N'Không thể xóa lô hàng' 
-		Rollback Tran delete_Proc
+		Rollback Tran delete_DetailShip
 	End Catch
 END
 GO
@@ -172,13 +172,13 @@ CREATE PROCEDURE [dbo].[proc_AddCustomer]
 AS
 BEGIN
 	Begin Try
-		Begin Tran insert_Proc
+		Begin Tran insert_Cus
 		INSERT INTO CUSTOMER(c_phone, c_name, c_point, c_status)
 		VALUES (@SDT , @TenKH, @Diem, 1)
-		Commit Tran insert_Proc
+		Commit Tran insert_Cus
 	End Try
 	Begin Catch
-		Rollback Tran insert_Proc
+		Rollback Tran insert_Cus
 		DECLARE @err NVARCHAR(MAX)
 		SELECT @err = ERROR_MESSAGE()
 		RAISERROR(@err, 16, 1)
@@ -193,14 +193,14 @@ CREATE PROC proc_UpdateCustomer
 AS
 BEGIN
 	Begin Try
-		Begin Tran update_Proc
+		Begin Tran update_Cus
 		UPDATE CUSTOMER 
 		SET c_name = @name, c_point = @point, c_status = @status
 		WHERE c_phone = @phone
-		Commit Tran update_Proc
+		Commit Tran update_Cus
 	End Try
 	Begin Catch
-		Rollback Tran update_Proc
+		Rollback Tran update_Cus
 		DECLARE @err NVARCHAR(MAX)
 		SELECT @err = ERROR_MESSAGE()
 		RAISERROR(@err, 16, 1)
@@ -214,13 +214,13 @@ CREATE PROC proc_DeleteCustomer
 AS
 BEGIN
 	Begin Try
-		Begin Tran delete_Proc
+		Begin Tran delete_Cus
 		Update CUSTOMER Set c_status = 0 WHERE CUSTOMER.c_phone = @phone
-		Commit Tran delete_Proc
+		Commit Tran delete_Cus
 	End Try
 	Begin Catch
 		Print N'Không thể xóa khách hàng' 
-		Rollback Tran delete_Proc
+		Rollback Tran delete_Cus
 	End Catch
 END
 GO
@@ -235,12 +235,12 @@ CREATE PROCEDURE proc_AddEmployee
 AS
 BEGIN
 	BEGIN TRY
-		Begin Tran insert_Proc
+		Begin Tran insert_Emp
 		INSERT INTO dbo.EMPLOYEE VALUES(@id, @name, @address, @phone, @gender, default)
-		Commit Tran insert_Proc
+		Commit Tran insert_Emp
 	END TRY
 	BEGIN CATCH
-		Rollback Tran insert_Proc
+		Rollback Tran insert_Emp
 		DECLARE @err NVARCHAR(MAX)
 		SELECT @err = ERROR_MESSAGE()
 		RAISERROR(@err, 16, 1)
@@ -257,14 +257,14 @@ CREATE PROC proc_UpdateEmployee
 AS
 BEGIN
 	Begin Try
-		Begin Tran update_Proc
+		Begin Tran update_Emp
 		UPDATE EMPLOYEE 
 		SET e_name = @name, e_address = @address, e_phone = @phone, e_gender = @gender
 		WHERE e_id = @id
-		Commit Tran update_Proc
+		Commit Tran update_Emp
 	End Try
 	Begin Catch
-		Rollback Tran update_Proc
+		Rollback Tran update_Emp
 		DECLARE @err NVARCHAR(MAX)
 		SELECT @err = ERROR_MESSAGE()
 		RAISERROR(@err, 16, 1)
@@ -278,13 +278,13 @@ CREATE PROC proc_DeleteEmployee
 AS
 BEGIN
 	Begin Try
-		Begin Tran delete_Proc
+		Begin Tran delete_Emp
 		Update EMPLOYEE Set e_status = 0 WHERE EMPLOYEE.e_id = @id
-		Commit Tran delete_Proc
+		Commit Tran delete_Emp
 	End Try
 	Begin Catch
 		Print N'Không thể xóa nhân viên' 
-		Rollback Tran delete_Proc
+		Rollback Tran delete_Emp
 	End Catch
 END
 GO
@@ -321,13 +321,13 @@ CREATE PROCEDURE proc_AddSupplier
 AS
 BEGIN
 	BEGIN TRY
-		Begin Tran insert_Proc
+		Begin Tran insert_Sup
 		INSERT INTO SUPPLIER VALUES(@s_id, @s_name, @s_phone, @s_address, default)
-		Commit Tran insert_Proc
+		Commit Tran insert_Sup
 	END TRY
 	BEGIN CATCH
 		print N'Gặp lỗi trong quá trình thêm nhà cung cấp'
-		Rollback Tran insert_Proc
+		Rollback Tran insert_Sup
 	END CATCH
 END
 GO
@@ -358,14 +358,14 @@ CREATE PROCEDURE proc_AddBill
 AS
 BEGIN
 	BEGIN TRY
-		Begin Tran insert_Proc
+		Begin Tran insert_Bill
 		INSERT INTO dbo.Bill VALUES(@b_id, @date, @totalpay, @discount, default, @c_phone, @e_id)
-		Commit Tran insert_Proc
+		Commit Tran insert_Bill
 	END TRY
 	BEGIN CATCH
 		print N'Gặp lỗi trong quá trình thêm Bill'
 		print error_message()
-		Rollback Tran insert_Proc
+		Rollback Tran insert_Bill
 	END CATCH
 END
 GO
@@ -378,14 +378,14 @@ CREATE PROCEDURE proc_AddDetailBill
 AS
 BEGIN
 	BEGIN TRY
-		Begin Tran insert_Proc
+		Begin Tran insert_DetailBill
 		INSERT INTO dbo.DETAIL_BILL VALUES(@b_id, @p_id, @db_quantity,default)
-		Commit Tran insert_Proc
+		Commit Tran insert_DetailBill
 	END TRY
 	BEGIN CATCH
 		print N'Gặp lỗi trong quá trình thêm chi tiết Bill'
 		print error_message()
-		Rollback Tran insert_Proc
+		Rollback Tran insert_DetailBill
 	END CATCH
 END
 GO
@@ -396,7 +396,7 @@ CREATE PROC proc_DeleteBill
 AS
 BEGIN
     BEGIN TRY
-        BEGIN TRANSACTION delete_Proc
+        BEGIN TRANSACTION delete_Bill
 
         -- Xóa dữ liệu tương ứng trong chi tiết hóa đơn
         UPDATE DETAIL_BILL SET db_status = 0 WHERE b_id = @bid
@@ -404,11 +404,11 @@ BEGIN
         -- Xóa hóa đơn
         UPDATE BILL SET b_status = 0 WHERE b_id = @bid
 
-        COMMIT TRANSACTION delete_Proc
+        COMMIT TRANSACTION delete_Bill
     END TRY
     BEGIN CATCH
         PRINT N'Không thể xóa hóa đơn' 
-        ROLLBACK TRANSACTION delete_Proc
+        ROLLBACK TRANSACTION delete_Bill
     END CATCH
 END
 GO
