@@ -404,3 +404,37 @@ BEGIN
     END CATCH
 END
 GO
+--tạo mã lô hàng tự động
+CREATE PROCEDURE proc_CreateAutoSupplierID
+    @idtype VARCHAR(10)
+AS
+BEGIN
+    BEGIN TRY
+        SELECT CONCAT(@idtype, RIGHT(CONCAT('000',ISNULL(right(max(s_id),4),0) + 1),4))
+                                            FROM SUPPLIER where s_id like @idtype + '%'
+    END TRY
+    BEGIN CATCH
+        PRINT 'Có lỗi xảy ra'
+        PRINT ERROR_MESSAGE();
+    END CATCH;
+END;
+GO
+--thêm supplier
+CREATE PROCEDURE proc_AddSupplier
+	@s_id varchar(10),
+	@s_name varchar(255),
+	@s_phone varchar(10),
+	@s_address varchar(255)
+AS
+BEGIN
+	BEGIN TRY
+		Begin Tran insert_Pro
+		INSERT INTO dbo.SUPPLIER VALUES(@s_id, @s_name, @s_phone, @s_address, default)
+		Commit Tran insert_Pro
+	END TRY
+	BEGIN CATCH
+		print N'Gặp lỗi trong quá trình thêm nhà cung cấp'
+		Rollback Tran insert_Pro
+	END CATCH
+END
+GO
