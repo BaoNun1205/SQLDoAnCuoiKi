@@ -368,8 +368,10 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		print N'Gặp lỗi trong quá trình thêm Bill'
-		print error_message()
 		Rollback Tran insert_Bill
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
 	END CATCH
 END
 GO
@@ -388,8 +390,10 @@ BEGIN
 	END TRY
 	BEGIN CATCH
 		print N'Gặp lỗi trong quá trình thêm chi tiết Bill'
-		print error_message()
-		Rollback Tran insert_DetailBill
+		Rollback Tran insert_Bill
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
 	END CATCH
 END
 GO
