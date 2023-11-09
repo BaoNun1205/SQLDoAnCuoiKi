@@ -46,6 +46,20 @@ FROM EMPLOYEE e INNER JOIN ACCOUNT a
 ON e.e_id = a.e_id
 WHERE a.a_status = 1;
 GO
+
+--Xem thông tin người tạo và người mua hóa đơn
+CREATE VIEW V_BillBasic AS
+SELECT 
+    E.e_name,
+    C.c_name,
+	b.b_date,
+    B.b_id
+FROM 
+    BILL AS B
+    JOIN EMPLOYEE AS E ON B.e_id = E.e_id
+    JOIN CUSTOMER AS C ON B.c_phone = C.c_phone;
+GO
+	
 --Xem thong tin hoa don
 CREATE VIEW V_INFO_BILL
 AS
