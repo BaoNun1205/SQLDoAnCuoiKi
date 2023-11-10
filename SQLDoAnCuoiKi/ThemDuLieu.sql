@@ -23,9 +23,9 @@ VALUES
 
 
 -- Chèn thông tin vào bảng ACCOUNT
-INSERT INTO ACCOUNT (a_username, a_password, e_id)
+INSERT INTO ACCOUNT (a_username, a_password, a_status, e_id)
 VALUES
-    ('bao', '123', 'EMP001')
+    ('bao', '123', default, 'EMP001')
 
 INSERT INTO SUPPLIER (s_id, s_name, s_phone, s_address, s_status)
 VALUES
