@@ -134,13 +134,6 @@ ON ACCOUNT
 AFTER INSERT, UPDATE
 AS
 BEGIN
-    -- Kiểm tra username
-    IF EXISTS (SELECT * FROM inserted WHERE TRIM(a_username) = '')
-    BEGIN
-        RAISERROR('Username không được để trống', 16, 1)
-        ROLLBACK TRANSACTION
-        RETURN
-    END
 	-- Kiểm tra password
     IF EXISTS (SELECT * FROM inserted WHERE TRIM(a_password) = '')
     BEGIN
