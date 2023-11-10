@@ -246,7 +246,7 @@ BEGIN
 		INSERT INTO dbo.EMPLOYEE VALUES(@id, @name, @address, @phone, @gender, default)
 
 		-- Insert into ACCOUNT table
-		INSERT INTO dbo.ACCOUNT VALUES(@username, @password, @id)
+		INSERT INTO dbo.ACCOUNT VALUES(@username, @password, default, @id)
 
 		COMMIT TRAN insert_Emp
 	END TRY
@@ -302,6 +302,10 @@ BEGIN
 		BEGIN TRAN delete_Emp
 		UPDATE EMPLOYEE 
 		SET e_status = 0
+		WHERE e_id = @id
+
+		UPDATE ACCOUNT 
+		SET a_status = 0
 		WHERE e_id = @id
 		COMMIT TRAN delete_Emp
 	END TRY
