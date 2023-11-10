@@ -52,7 +52,24 @@ RETURN
     WHERE p_name LIKE '%' + @name + '%' AND p_status = 1
 );
 GO
-	
+
+--Tim so luong san pham ban duoc
+CREATE FUNCTION fn_FindProductSell()
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT p.p_id, 
+           p.p_name,
+           p.p_size,
+           SUM(db.db_quantity) quantity
+    FROM PRODUCT p INNER JOIN DETAIL_BILL db ON p.p_id = db.p_id
+    GROUP BY p.p_id, p.p_name, p.p_size
+);
+--Lay 10 san pham ban chay
+select TOP 10 *
+FROM fn_FindProductSell()
+ORDER BY quantity DESC
 --BILL
 --tìm kiếm hóa đơn theo mã hóa đơn
 GO
