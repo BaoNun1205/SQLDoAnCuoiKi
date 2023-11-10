@@ -85,7 +85,6 @@ BEGIN
 END;
 
 --Employee
---Kiểm tra trước khi thêm và cập nhật nhân viên
 CREATE TRIGGER trg_CheckEmployee
 ON EMPLOYEE
 AFTER INSERT, UPDATE
@@ -110,7 +109,7 @@ BEGIN
 		SELECT 1
 		FROM EMPLOYEE e
 		INNER JOIN inserted i ON TRIM(e.e_phone) = TRIM(i.e_phone)
-		WHERE e.e_id <> i.e_id -- Loại trừ việc so sánh với chính bản ghi đang được cập nhật
+		WHERE e.e_id <> i.e_id and e.e_status = 1 -- Loại trừ việc so sánh với chính bản ghi đang được cập nhật, xét tài khoản hoạt động
 	)
 	BEGIN
 		RAISERROR('Số điện thoại đã được sử dụng', 16, 1)
