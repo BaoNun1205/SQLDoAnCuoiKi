@@ -231,19 +231,27 @@ GO
 --Thêm nhan vien
 CREATE PROCEDURE proc_AddEmployee
 	@id VARCHAR(10),
-	@name VARCHAR(255),	
+	@name VARCHAR(255),
 	@address VARCHAR(255),
 	@phone VARCHAR(10),
-	@gender VARCHAR(10)
+	@gender VARCHAR(10),
+	@username NVARCHAR(50),
+	@password VARCHAR(25)
 AS
 BEGIN
 	BEGIN TRY
-		Begin Tran insert_Emp
+		BEGIN TRAN insert_Emp
+
+		-- Insert into EMPLOYEE table
 		INSERT INTO dbo.EMPLOYEE VALUES(@id, @name, @address, @phone, @gender, default)
-		Commit Tran insert_Emp
+
+		-- Insert into ACCOUNT table
+		INSERT INTO dbo.ACCOUNT VALUES(@username, @password, @id)
+
+		COMMIT TRAN insert_Emp
 	END TRY
 	BEGIN CATCH
-		Rollback Tran insert_Emp
+		ROLLBACK TRAN insert_Emp
 		DECLARE @err NVARCHAR(MAX)
 		SELECT @err = ERROR_MESSAGE()
 		RAISERROR(@err, 16, 1)
@@ -251,44 +259,56 @@ BEGIN
 END
 GO
 --Cap nhat nhan vien
-CREATE PROC proc_UpdateEmployee
+CREATE PROCEDURE proc_UpdateEmployee
 	@id VARCHAR(10),
 	@name VARCHAR(255),	
 	@address VARCHAR(255),
 	@phone VARCHAR(10),
-	@gender VARCHAR(10)
+	@gender VARCHAR(10),
+	@username NVARCHAR(50),
+	@password VARCHAR(25)
 AS
 BEGIN
-	Begin Try
-		Begin Tran update_Emp
+	BEGIN TRY
+		BEGIN TRAN update_Emp
+
+		-- Update EMPLOYEE table
 		UPDATE EMPLOYEE 
 		SET e_name = @name, e_address = @address, e_phone = @phone, e_gender = @gender
 		WHERE e_id = @id
-		Commit Tran update_Emp
-	End Try
-	Begin Catch
-		Rollback Tran update_Emp
+
+		-- Update ACCOUNT table
+		UPDATE ACCOUNT 
+		SET a_username = @username, a_password = @password
+		WHERE e_id = @id
+
+		COMMIT TRAN update_Emp
+	END TRY
+	BEGIN CATCH
+		ROLLBACK TRAN update_Emp
 		DECLARE @err NVARCHAR(MAX)
 		SELECT @err = ERROR_MESSAGE()
 		RAISERROR(@err, 16, 1)
-	End Catch
+	END CATCH
 END
 GO
 
 --Xóa nhân viên
-CREATE PROC proc_DeleteEmployee
+CREATE PROCEDURE proc_DeleteEmployee
 	@id VARCHAR(10)
 AS
 BEGIN
-	Begin Try
-		Begin Tran delete_Emp
-		Update EMPLOYEE Set e_status = 0 WHERE EMPLOYEE.e_id = @id
-		Commit Tran delete_Emp
-	End Try
-	Begin Catch
-		Print N'Không thể xóa nhân viên' 
-		Rollback Tran delete_Emp
-	End Catch
+	BEGIN TRY
+		BEGIN TRAN delete_Emp
+		UPDATE EMPLOYEE 
+		SET e_status = 0
+		WHERE e_id = @id
+		COMMIT TRAN delete_Emp
+	END TRY
+	BEGIN CATCH
+		PRINT N'Không thể xóa nhân viên' 
+		ROLLBACK TRAN delete_Emp
+	END CATCH
 END
 GO
 
