@@ -156,9 +156,10 @@ RETURNS TABLE
 AS
 RETURN
 (
-    SELECT e_id, e_name, e_address, e_phone, e_gender
-    FROM EMPLOYEE
-    WHERE e_id LIKE '%' + @id + '%' and e_status = 1
+    SELECT e.e_id, e.e_name, e.e_address, e.e_phone, e.e_gender, a.a_username, a.a_password
+    FROM EMPLOYEE e INNER JOIN ACCOUNT a
+	ON e.e_id = a.e_id
+    WHERE e.e_id LIKE '%' + @id + '%' and e.e_status = 1
 );
 --Tim kiem nhan vien theo ten
 CREATE FUNCTION [dbo].[SearchEmployeeByName](@name nvarchar(50))
@@ -166,7 +167,8 @@ RETURNS TABLE
 AS
 RETURN
 (
-    SELECT e_id, e_name, e_address, e_phone, e_gender
-    FROM EMPLOYEE
-    WHERE e_name LIKE N'%' + @name + '%' and e_status = 1
+    SELECT e.e_id, e.e_name, e.e_address, e.e_phone, e.e_gender, a.a_username, a.a_password
+    FROM EMPLOYEE e INNER JOIN ACCOUNT a
+	ON e.e_id = a.e_id
+    WHERE e.e_name LIKE N'%' + @name + '%' and e.e_status = 1
 );
