@@ -128,6 +128,39 @@ BEGIN
 END;
 GO
 
+--ACCOUNT
+--Kiểm tra trước khi thêm và cập nhật account nhan vien
+CREATE TRIGGER trg_CheckAccount
+ON ACCOUNT
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    -- Kiểm tra username
+    IF EXISTS (SELECT * FROM inserted WHERE TRIM(a_username) = '')
+    BEGIN
+        RAISERROR('Username không được để trống', 16, 1)
+        ROLLBACK TRANSACTION
+        RETURN
+    END
+	IF EXISTS (
+		SELECT 1
+		FROM ACCOUNT a
+		INNER JOIN inserted i ON TRIM(a.a_username) = TRIM(a.a_username)
+		WHERE a.e_id <> i.e_id -- Loại trừ việc so sánh với chính bản ghi đang được cập nhật
+	)
+	BEGIN
+		RAISERROR('Username đã được sử dụng', 16, 1)
+		ROLLBACK TRANSACTION
+		RETURN
+	END
+	-- Kiểm tra password
+    IF EXISTS (SELECT * FROM inserted WHERE TRIM(a_password) = '')
+    BEGIN
+        RAISERROR('Password không được để trống', 16, 1)
+        ROLLBACK TRANSACTION
+        RETURN
+    END
+END;
 --SUPPILIER
 CREATE TRIGGER trg_CheckSuppiler
 ON SUPPLIER
