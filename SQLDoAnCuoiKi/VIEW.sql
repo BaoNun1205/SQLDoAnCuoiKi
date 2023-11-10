@@ -31,20 +31,12 @@ FROM CUSTOMER c
 WHERE c.c_status = 0;
 GO
 --Xem thong tin nhan vien
-create view V_EMPLOYEE_INFO
+CREATE VIEW V_EMPLOYEE_INFO
 AS
-SELECT e_id, e_name, e_address, e_phone, e_gender
-FROM EMPLOYEE
-WHERE e_status = 1
-GO
-
---Xem thong tin account
-create view V_ACCOUNT_INFO
-AS
-SELECT e.e_id, e.e_name, a.a_username, a.a_password
-FROM EMPLOYEE e INNER JOIN ACCOUNT a 
+SELECT e.e_id, e.e_name, e.e_address, e.e_phone, e.e_gender, a.a_username, a.a_password
+FROM EMPLOYEE e INNER JOIN ACCOUNT a
 ON e.e_id = a.e_id
-WHERE a.a_status = 1;
+WHERE e.e_status = 1;
 GO
 
 --Xem thông tin người tạo và người mua hóa đơn
