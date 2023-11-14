@@ -227,3 +227,13 @@ BEGIN
 
     RETURN ISNULL(@totalSalesAmount, 0);
 END;
+--số khách hàng
+CREATE FUNCTION func_Customers()
+RETURNS INT
+AS
+BEGIN
+	DECLARE @result int
+	SELECT @result= Count(*) FROM CUSTOMER Where c_status=1
+	RETURN @result
+END
+go
