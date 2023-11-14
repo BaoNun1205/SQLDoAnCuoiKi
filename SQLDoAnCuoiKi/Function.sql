@@ -53,23 +53,23 @@ RETURN
 );
 GO
 
---Tim so luong san pham ban duoc
-CREATE FUNCTION fn_FindProductSell()
+--Tim top 10 san pham ban duoc nhieu nhat
+CREATE FUNCTION fn_FindProductSell(@date INT)
 RETURNS TABLE
 AS
 RETURN
 (
-    SELECT p.p_id, 
-           p.p_name,
-           p.p_size,
-           SUM(db.db_quantity) quantity
-    FROM PRODUCT p INNER JOIN DETAIL_BILL db ON p.p_id = db.p_id
-    GROUP BY p.p_id, p.p_name, p.p_size
+    SELECT TOP 10 p.p_id, 
+              p.p_name,
+              p.p_size,
+              SUM(db.db_quantity) AS quantity
+	FROM (PRODUCT p 
+	INNER JOIN DETAIL_BILL db ON p.p_id = db.p_id) INNER JOIN BILL b ON b.b_id = db.b_id
+	WHERE b.b_date >= DATEADD(DAY, -@date, GETDATE())  -- Chọn các hóa đơn trong vòng @days ngày gần đây
+	GROUP BY p.p_id, p.p_name, p.p_size
+	ORDER BY quantity DESC
 );
---Lay 10 san pham ban chay
-select TOP 10 *
-FROM fn_FindProductSell()
-ORDER BY quantity DESC
+
 --BILL
 --tìm kiếm hóa đơn theo mã hóa đơn
 GO
