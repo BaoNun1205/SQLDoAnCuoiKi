@@ -189,3 +189,41 @@ RETURN
 	ON e.e_id = a.e_id
     WHERE e.e_name LIKE N'%' + @name + '%' and e.e_status = 1
 );
+
+--THỐNG KÊ
+-- Tổng tiền nhập hàng
+CREATE FUNCTION dbo.CalculateTotalImportAmountInLastNDays(
+    @numberOfDays INT
+)
+RETURNS DECIMAL(15, 0)
+AS
+BEGIN
+    DECLARE @totalAmount DECIMAL(15, 0);
+    DECLARE @startDate DATE = DATEADD(DAY, -@numberOfDays, GETDATE());
+    
+    SELECT @totalAmount = SUM(DS.p_imPrice * DS.p_quantity)
+    FROM SHIPMENT SH
+    JOIN DETAIL_SHIPMENT DS ON SH.sh_id = DS.sh_id
+    WHERE SH.sh_imDate >= @startDate;
+
+    RETURN ISNULL(@totalAmount, 0);
+END;
+
+--Tổng tiền bán hàng
+CREATE FUNCTION dbo.CalculateTotalSalesAmountInLastNDays(
+    @numberOfDays INT
+)
+RETURNS DECIMAL(15, 0)
+AS
+BEGIN
+    DECLARE @totalSalesAmount DECIMAL(15, 0);
+    DECLARE @startDate DATE = DATEADD(DAY, -@numberOfDays, GETDATE());
+
+    SELECT @totalSalesAmount = SUM(DB.db_quantity * P.p_price)
+    FROM BILL B
+    JOIN DETAIL_BILL DB ON B.b_id = DB.b_id
+    JOIN PRODUCT P ON DB.p_id = P.p_id
+    WHERE B.b_date >= @startDate;
+
+    RETURN ISNULL(@totalSalesAmount, 0);
+END;
