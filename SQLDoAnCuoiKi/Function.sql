@@ -235,5 +235,16 @@ BEGIN
 	DECLARE @result int
 	SELECT @result= Count(*) FROM CUSTOMER Where c_status=1
 	RETURN @result
-END
-go
+END;
+
+--sp đã bán theo thời gian
+CREATE FUNCTION func_sanPhamDaBan (@numberOfDays INT)
+RETURNS INT
+AS
+BEGIN	
+	DECLARE @result int
+	DECLARE @startDate DATE = DATEADD(DAY, -@numberOfDays, GETDATE());
+	SELECT @result= SUM(db_quantity) FROM DETAIL_BILL db INNER JOIN BILL b ON db.b_id=b.b_id 
+	where db_status=1 AND b_date>= @startDate;
+	RETURN @result
+END;
