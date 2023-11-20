@@ -479,3 +479,24 @@ BEGIN
     END CATCH
 END
 GO
+
+CREATE PROCEDURE pro_AddAccount
+	@ausername NVARCHAR(50),
+	@apassword VARCHAR(25),
+	@eid VARCHAR(10),
+	@arole BIT
+AS
+BEGIN
+	BEGIN TRY
+		Begin Tran insert_Acc
+		INSERT INTO dbo.ACCOUNT VALUES(@ausername, @apassword, default, @eid, @arole)
+		Commit Tran insert_Acc
+	END TRY
+	BEGIN CATCH
+		Rollback Tran insert_Acc
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
+	END CATCH
+END
+GO
