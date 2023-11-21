@@ -1,0 +1,21 @@
+CREATE ROLE Staff
+--Gán các quyền trên table cho role Staff
+GRANT SELECT, REFERENCES ON PRODUCT TO Staff
+GRANT SELECT, REFERENCES ON BILL TO Staff
+GRANT SELECT, REFERENCES ON DETAIL_BILL TO Staff
+GRANT SELECT, REFERENCES ON DETAIL_SHIPMENT TO Staff
+GRANT SELECT, REFERENCES ON SHIPMENT TO Staff
+GRANT SELECT, REFERENCES ON SUPPLIER TO Staff
+
+-- Gán quyền thực thi trên các procedure, function cho role Staff
+GRANT EXECUTE TO Staff
+GRANT SELECT TO Staff
+
+DENY EXECUTE ON proc_AddEmployee TO Staff;
+DENY EXECUTE ON proc_UpdateEmployee TO Staff;
+DENY EXECUTE ON proc_DeleteEmployee TO Staff;
+DENY SELECT ON dbo.SearchEmployeeByID TO Staff;
+DENY SELECT ON dbo.SearchEmployeeByName TO Staff;
+DENY SELECT ON V_EMPLOYEE_INFO TO Staff;
+DENY EXECUTE ON pro_addAccount TO Staff;
+DENY SELECT ON V_INFO_ACCOUNT TO Staff;
