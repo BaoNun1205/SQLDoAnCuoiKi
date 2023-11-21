@@ -33,9 +33,8 @@ GO
 --Xem thong tin nhan vien
 CREATE VIEW V_EMPLOYEE_INFO
 AS
-SELECT e.e_id, e.e_name, e.e_address, e.e_phone, e.e_gender, a.a_username, a.a_password
-FROM EMPLOYEE e INNER JOIN ACCOUNT a
-ON e.e_id = a.e_id
+SELECT e.e_id, e.e_name, e.e_address, e.e_phone, e.e_gender
+FROM EMPLOYEE e 
 WHERE e.e_status = 1;
 GO
 
