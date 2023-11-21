@@ -38,6 +38,15 @@ FROM EMPLOYEE e
 WHERE e.e_status = 1;
 GO
 
+--Thong tin tai khoan
+CREATE VIEW V_INFO_ACCOUNT
+AS
+SELECT
+	a.a_username as "Tài khoản",
+	a.a_password as "Mật khẩu",
+	a.e_id as "Mã nhân viên"
+FROM ACCOUNT a
+WHERE a.a_status = 1
 --Xem thông tin người tạo và người mua hóa đơn
 CREATE VIEW V_BillBasic AS
 SELECT 
