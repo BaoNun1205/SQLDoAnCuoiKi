@@ -218,3 +218,29 @@ BEGIN
 	WHERE b_id = @b_id
 END
 GO
+
+--Tạo tài khoảng login và user khi tạo tài khoản mới
+CREATE TRIGGER addAccountRole ON ACCOUNT
+AFTER INSERT
+AS
+BEGIN
+	DECLARE @a_username VARCHAR(50), @a_password VARCHAR(25), @a_role INT
+
+	SELECT @a_username = i.a_username, @a_password = i.a_password, @a_role = i.a_role
+	FROM inserted i
+
+	DECLARE @sqlString VARCHAR(2000)
+	SET @sqlString = 'CREATE LOGIN [' + @a_username + '] WITH PASSWORD=''' + @a_password +
+''', DEFAULT_DATABASE=[CuaHangDBMS], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF'
+	EXEC (@sqlString)
+
+	SET @sqlString = 'CREATE USER ' + @a_username + ' FOR LOGIN ' + @a_username
+	EXEC (@sqlString)
+
+	IF (@a_role = 1)
+		SET @sqlString = 'ALTER SERVER ROLE sysadmin ADD MEMBER ' + @a_username
+	ELSE
+		SET @sqlString = 'ALTER ROLE Staff ADD MEMBER ' + @a_username
+
+	EXEC (@sqlString)
+END
