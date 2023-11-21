@@ -190,6 +190,7 @@ RETURN
     WHERE e.e_name LIKE N'%' + @name + '%' and e.e_status = 1
 );
 
+
 --THỐNG KÊ
 -- Tổng tiền nhập hàng
 CREATE FUNCTION dbo.CalculateTotalImportAmountInLastNDays(
