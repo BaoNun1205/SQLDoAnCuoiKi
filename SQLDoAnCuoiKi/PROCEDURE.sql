@@ -234,9 +234,7 @@ CREATE PROCEDURE proc_AddEmployee
 	@name VARCHAR(255),
 	@address VARCHAR(255),
 	@phone VARCHAR(10),
-	@gender VARCHAR(10),
-	@username NVARCHAR(50),
-	@password VARCHAR(25)
+	@gender VARCHAR(10)
 AS
 BEGIN
 	BEGIN TRY
@@ -244,10 +242,6 @@ BEGIN
 
 		-- Insert into EMPLOYEE table
 		INSERT INTO dbo.EMPLOYEE VALUES(@id, @name, @address, @phone, @gender, default)
-
-		-- Insert into ACCOUNT table
-		INSERT INTO dbo.ACCOUNT VALUES(@username, @password, default, @id)
-
 		COMMIT TRAN insert_Emp
 	END TRY
 	BEGIN CATCH
@@ -264,9 +258,7 @@ CREATE PROCEDURE proc_UpdateEmployee
 	@name VARCHAR(255),	
 	@address VARCHAR(255),
 	@phone VARCHAR(10),
-	@gender VARCHAR(10),
-	@username NVARCHAR(50),
-	@password VARCHAR(25)
+	@gender VARCHAR(10)
 AS
 BEGIN
 	BEGIN TRY
@@ -276,12 +268,6 @@ BEGIN
 		UPDATE EMPLOYEE 
 		SET e_name = @name, e_address = @address, e_phone = @phone, e_gender = @gender
 		WHERE e_id = @id
-
-		-- Update ACCOUNT table
-		UPDATE ACCOUNT 
-		SET a_username = @username, a_password = @password
-		WHERE e_id = @id
-
 		COMMIT TRAN update_Emp
 	END TRY
 	BEGIN CATCH
@@ -302,10 +288,6 @@ BEGIN
 		BEGIN TRAN delete_Emp
 		UPDATE EMPLOYEE 
 		SET e_status = 0
-		WHERE e_id = @id
-
-		UPDATE ACCOUNT 
-		SET a_status = 0
 		WHERE e_id = @id
 		COMMIT TRAN delete_Emp
 	END TRY
