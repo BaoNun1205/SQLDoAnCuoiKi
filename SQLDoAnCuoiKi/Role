@@ -9,7 +9,8 @@ GRANT SELECT, REFERENCES ON SUPPLIER TO Staff
 
 -- Gán quyền thực thi trên các procedure, function cho role Staff
 GRANT EXECUTE TO Staff
-GRANT SELECT TO Staff
+GRANT SELECT TO Staff  
+
 
 DENY EXECUTE ON proc_AddEmployee TO Staff;
 DENY EXECUTE ON proc_UpdateEmployee TO Staff;
@@ -18,4 +19,7 @@ DENY SELECT ON dbo.SearchEmployeeByID TO Staff;
 DENY SELECT ON dbo.SearchEmployeeByName TO Staff;
 DENY SELECT ON V_EMPLOYEE_INFO TO Staff;
 DENY EXECUTE ON pro_addAccount TO Staff;
+DENY EXECUTE ON proc_updateAccount TO Staff;
 DENY SELECT ON V_INFO_ACCOUNT TO Staff;
+DENY SELECT ON dbo.SearchAccountByID TO Staff;
+DENY SELECT ON dbo.SearchAccountByUserName TO Staff;
