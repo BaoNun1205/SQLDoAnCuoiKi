@@ -249,3 +249,26 @@ BEGIN
 	where db_status=1 AND b_date>= @startDate;
 	RETURN @result
 END;
+
+--Account
+--Tim kiem tai khoan theo id
+CREATE FUNCTION [dbo].[SearchAccountByID](@id varchar(10))
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT a.a_username, a.a_password, a.e_id
+    FROM ACCOUNT a
+    WHERE a.e_id LIKE '%' + @id + '%' and a.a_status = 1
+);
+GO
+--Tim kiem tai khoan theo ten dang nhap
+CREATE FUNCTION [dbo].[SearchAccountByUserName](@name nvarchar(50))
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT a.a_username, a.a_password, a.e_id
+    FROM ACCOUNT a
+    WHERE a.a_username LIKE N'%' + @name + '%' and a.a_status = 1
+);
