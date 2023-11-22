@@ -471,12 +471,25 @@ CREATE PROCEDURE pro_AddAccount
 AS
 BEGIN
 	BEGIN TRY
-		Begin Tran insert_Acc
+		BEGIN TRAN insert_Acc
+
+		-- Kiểm tra xem @ausername có bắt đầu bằng một ký tự chữ không
+		IF ISNULL(PATINDEX('[A-Za-z]%', @ausername), 0) = 0
+		BEGIN
+			-- Nếu không, báo lỗi và hủy bỏ giao dịch
+			ROLLBACK TRAN insert_Acc
+			RAISERROR('Tên người dùng phải bắt đầu bằng một ký tự chữ.', 16, 1)
+			RETURN
+		END
+
+		-- Nếu kiểm tra qua, thực hiện chèn dữ liệu
 		INSERT INTO dbo.ACCOUNT VALUES(@ausername, @apassword, default, @eid, @arole)
-		Commit Tran insert_Acc
+
+		COMMIT TRAN insert_Acc
 	END TRY
 	BEGIN CATCH
-		Rollback Tran insert_Acc
+		-- Xử lý lỗi
+		ROLLBACK TRAN insert_Acc
 		DECLARE @err NVARCHAR(MAX)
 		SELECT @err = ERROR_MESSAGE()
 		RAISERROR(@err, 16, 1)
