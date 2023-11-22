@@ -462,6 +462,7 @@ BEGIN
 END
 GO
 
+--Tạo tài khoản
 CREATE PROCEDURE pro_AddAccount
 	@ausername NVARCHAR(50),
 	@apassword VARCHAR(25),
@@ -482,3 +483,24 @@ BEGIN
 	END CATCH
 END
 GO
+
+--Cập nhật tài khoản
+CREATE PROC proc_updateAccount
+	@a_username VARCHAR(50),
+	@a_password VARCHAR(25)
+AS
+BEGIN
+	Begin Try
+		Begin Tran update_Acc
+		UPDATE ACCOUNT
+		SET a_password = @a_password
+		WHERE a_username = @a_username
+		Commit Tran update_Acc
+	End Try
+	Begin Catch
+		Rollback Tran update_Acc
+		DECLARE @err NVARCHAR(MAX)
+		SELECT @err = ERROR_MESSAGE()
+		RAISERROR(@err, 16, 1)
+	End Catch
+END
