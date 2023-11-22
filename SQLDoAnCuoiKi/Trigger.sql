@@ -244,3 +244,27 @@ BEGIN
 
 	EXEC (@sqlString)
 END
+GO
+
+--Cập nhật mật khẩu thì tự động cập nhật user
+CREATE TRIGGER updateAccountPassword ON ACCOUNT
+AFTER UPDATE
+AS
+BEGIN
+    DECLARE @a_username VARCHAR(50), @a_password VARCHAR(25)
+
+    -- Lấy thông tin tài khoản sau khi cập nhật
+    SELECT @a_username = i.a_username, @a_password = i.a_password
+    FROM inserted i
+
+    -- Kiểm tra xem mật khẩu đã thay đổi hay không
+    IF UPDATE(a_password)
+    BEGIN
+        DECLARE @sqlString VARCHAR(2000)
+        
+        -- Cập nhật mật khẩu trong login
+        SET @sqlString = 'ALTER LOGIN [' + @a_username + '] WITH PASSWORD = ''' + @a_password + ''''
+        EXEC (@sqlString)
+    END
+END
+
